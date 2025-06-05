@@ -21,6 +21,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.adri833.orpheus.R
 import com.adri833.orpheus.components.NeonGoogleButton
 import com.adri833.orpheus.components.WavyText
 import com.adri833.orpheus.components.adjustForMobile
@@ -28,7 +32,11 @@ import com.adri833.orpheus.ui.background.LiraAnimatedBackground
 import kotlinx.coroutines.delay
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    viewModel: LoginViewModel = hiltViewModel(),
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val logoOffsetY = remember { Animatable(0f) }
     var showText by remember { mutableStateOf(false) }
     var showButton by remember { mutableStateOf(false) }
@@ -76,7 +84,7 @@ fun LoginScreen() {
             Spacer(modifier = Modifier.height(8.dp))
 
             AnimatedVisibility(visible = showText) {
-                WavyText("Orpheus")
+                WavyText(stringResource(R.string.app_name))
             }
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -89,7 +97,7 @@ fun LoginScreen() {
                 .offset(y = 60.dp)
         ) {
             NeonGoogleButton(
-                onClick = {}
+                onClick = {viewModel.loginWithGoogle(context, scope)}
             )
         }
     }

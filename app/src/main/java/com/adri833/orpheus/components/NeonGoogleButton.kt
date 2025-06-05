@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adri833.orpheus.R
@@ -93,7 +94,7 @@ fun NeonGoogleButton(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = "Iniciar sesión con Google",
+                    text = stringResource(R.string.login_google),
                     color = Color.White,
                     fontSize = 18.sp
                 )

@@ -12,7 +12,20 @@
           "package_name": "com.adri833.orpheus"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "722671315950-uo4opanfjhrtltkuaiu01qiuhs0s87as.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.adri833.orpheus",
+            "certificate_hash": "d6175654944d1a8959d30d61758f505864fb1618"
+          }
+        },
+        {
+          "client_id": "722671315950-gotq2v92d7s0ksivj41re1kjb12sjilk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAyWF8Hl8D7rI419avPjNltnw1gDfY33LQ"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722671315950-gotq2v92d7s0ksivj41re1kjb12sjilk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
