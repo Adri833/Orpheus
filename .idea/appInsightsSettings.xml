@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.adri833.orpheus" />
+                  <option name="mobileSdkAppId" value="1:722671315950:android:4abb102c4cc4a950a33cff" />
+                  <option name="projectId" value="orpheus-afe26" />
+                  <option name="projectNumber" value="722671315950" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

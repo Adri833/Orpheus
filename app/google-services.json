@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "722671315950",
+    "project_id": "orpheus-afe26",
+    "storage_bucket": "orpheus-afe26.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722671315950:android:4abb102c4cc4a950a33cff",
+        "android_client_info": {
+          "package_name": "com.adri833.orpheus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyWF8Hl8D7rI419avPjNltnw1gDfY33LQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

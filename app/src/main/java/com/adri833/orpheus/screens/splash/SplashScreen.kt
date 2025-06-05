@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.adri833.orpheus.components.OrpheusLogo
+import com.adri833.orpheus.ui.background.PentagramAnimation
 import kotlinx.coroutines.delay
 
 @Composable
@@ -36,7 +37,6 @@ fun SplashScreen(
         navigationToLogin()
     }
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +48,7 @@ fun SplashScreen(
 
         OrpheusLogo(
             modifier = Modifier
-                .size(280.dp)
+                .size(180.dp)
                 .alpha(alphaAnim.value)
         )
     }

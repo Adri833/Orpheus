@@ -14,13 +14,17 @@ import com.adri833.orpheus.components.OrpheusLogo
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import com.adri833.orpheus.components.NeonGoogleButton
 import com.adri833.orpheus.components.WavyText
+import com.adri833.orpheus.components.adjustForMobile
+import com.adri833.orpheus.ui.background.LiraAnimatedBackground
 import kotlinx.coroutines.delay
 
 @Composable
@@ -28,45 +32,63 @@ fun LoginScreen() {
     val logoOffsetY = remember { Animatable(0f) }
     var showText by remember { mutableStateOf(false) }
     var showButton by remember { mutableStateOf(false) }
+    var showLira by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         delay(1000L)
         logoOffsetY.animateTo(
-            targetValue = -250f,
+            targetValue = -180f,
             animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
         )
         delay(300L)
         showText = true
         delay(600L)
         showButton = true
+        delay(800L)
+        showLira = true
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black),
+            .background(Color.Black)
+            .adjustForMobile(),
         contentAlignment = Alignment.Center
     ) {
+
+        AnimatedVisibility(
+            visible = showLira,
+            enter = slideInHorizontally(
+                initialOffsetX = { fullWidth -> -fullWidth },
+                animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing)
+            )
+        ) {
+            LiraAnimatedBackground()
+        }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.offset(y = logoOffsetY.value.dp)
         ) {
             OrpheusLogo(
-                modifier = Modifier.size(280.dp)
+                modifier = Modifier.size(180.dp)
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             AnimatedVisibility(visible = showText) {
                 WavyText("Orpheus")
             }
+            Spacer(modifier = Modifier.height(8.dp))
         }
 
         AnimatedVisibility(
             visible = showButton,
-            modifier = Modifier.align(Alignment.Center)
-                .offset(y = 100.dp)
+            enter = fadeIn(animationSpec = tween(durationMillis = 800)),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .offset(y = 60.dp)
         ) {
             NeonGoogleButton(
-                text = "Iniciar sesión con Google",
                 onClick = {}
             )
         }

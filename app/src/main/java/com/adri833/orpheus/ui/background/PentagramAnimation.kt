@@ -1,4 +1,4 @@
-package com.adri833.orpheus.screens.splash
+package com.adri833.orpheus.ui.background
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize

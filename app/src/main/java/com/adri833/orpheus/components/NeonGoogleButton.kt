@@ -7,25 +7,35 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.adri833.orpheus.R
+import com.adri833.orpheus.ui.theme.BaseGoogleColors
 
 @Composable
 fun NeonGoogleButton(
-    text: String,
     onClick: () -> Unit
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "colorSweep")
@@ -39,19 +49,8 @@ fun NeonGoogleButton(
         label = "offset"
     )
 
-    val borderWidth = 3.dp
-    val shape = RoundedCornerShape(50)
-
-    val baseColors = listOf(
-        Color(0xFF4285F4),
-        Color(0xFFDB4437),
-        Color(0xFFF4B400),
-        Color(0xFF0F9D58),
-        Color(0xFF4285F4),
-    )
-
     val shiftedColors = run {
-        val size = baseColors.size
+        val size = BaseGoogleColors.size
         val shifted = mutableListOf<Color>()
 
         for (i in 0 until size - 1) {
@@ -59,7 +58,7 @@ fun NeonGoogleButton(
             val iLow = fIndex.toInt()
             val iHigh = (iLow + 1) % (size - 1)
             val fraction = fIndex - iLow
-            shifted.add(lerp(baseColors[iLow], baseColors[iHigh], fraction))
+            shifted.add(lerp(BaseGoogleColors[iLow], BaseGoogleColors[iHigh], fraction))
         }
 
         shifted + shifted.first()
@@ -71,17 +70,34 @@ fun NeonGoogleButton(
         modifier = Modifier
             .padding(8.dp)
             .graphicsLayer(rotationZ = offset.value * 0.01f)
-            .border(BorderStroke(borderWidth, brush), shape)
-            .padding(borderWidth)
+            .border(BorderStroke(4.dp, brush), RoundedCornerShape(50))
+            .padding(4.dp)
     ) {
         Button(
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-            shape = shape,
+            shape = RoundedCornerShape(50),
             modifier = Modifier
-                .defaultMinSize(minWidth = 180.dp, minHeight = 48.dp)
+                .defaultMinSize(minWidth = 240.dp, minHeight = 56.dp)
         ) {
-            Text(text = text, color = Color.White)
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_google),
+                    modifier = Modifier.size(36.dp),
+                    contentDescription = "Google logo"
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = "Iniciar sesión con Google",
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
+            }
         }
     }
 }
