@@ -49,7 +49,6 @@ fun SplashScreen(
         OrpheusLogo(
             modifier = Modifier
                 .size(180.dp)
-                .alpha(alphaAnim.value)
         )
     }
 }

@@ -1,20 +1,24 @@
+@file:Suppress("DEPRECATION")
+
 package com.adri833.orpheus.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.adri833.orpheus.screens.home.HomeScreen
 import com.adri833.orpheus.screens.login.LoginScreen
 import com.adri833.orpheus.screens.splash.SplashScreen
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavigationHost() {
-
     val navController = rememberNavController()
 
-    NavHost(
+    AnimatedNavHost(
         navController = navController,
-        startDestination = Routes.Splash.route
+        startDestination = Routes.Splash.route,
     ) {
 
         // Navegacion de la pantalla Splash
@@ -33,5 +37,9 @@ fun NavigationHost() {
             LoginScreen()
         }
 
+        // Navegacion de la pantalla Home
+        composable(route = Routes.Home.route) {
+            HomeScreen()
+        }
     }
 }

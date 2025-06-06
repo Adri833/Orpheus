@@ -62,14 +62,20 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
+    // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation ("androidx.credentials:credentials:1.5.0")
     implementation ("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     implementation("com.google.firebase:firebase-auth:23.2.1")
+
+    // Navigation
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
+
 }
