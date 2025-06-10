@@ -5,5 +5,9 @@
     <string name="login_success">Welcome</string>
 
     // Error messages
-    <string name="error_login">Login failed</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="error_login">Login error</string>
+    <string name="error_parsing_token">Error parsing token</string>
+    <string name="unrecognized_credential">Unrecognized credential</string>
+    <string name="invalid_credential">Invalid credential</string>
 </resources>

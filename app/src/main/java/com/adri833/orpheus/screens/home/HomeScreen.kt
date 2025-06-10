@@ -18,7 +18,8 @@ fun HomeScreen() {
             .adjustForMobile()
     ) {
         Text(
-            text = "Estas Flipando"
+            text = "Pantalla Home",
+            color = Color.White
         )
     }
 }

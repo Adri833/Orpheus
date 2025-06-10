@@ -1,11 +1,15 @@
 package com.adri833.orpheus.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -20,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,6 +42,9 @@ import com.adri833.orpheus.ui.theme.BaseGoogleColors
 
 @Composable
 fun NeonGoogleButton(
+    enabled: Boolean = true,
+    isLoading: Boolean = false,
+    isSuccessAnimationActive: Boolean = false,
     onClick: () -> Unit
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "colorSweep")
@@ -79,9 +87,10 @@ fun NeonGoogleButton(
             colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
             shape = RoundedCornerShape(50),
             modifier = Modifier
-                .defaultMinSize(minWidth = 240.dp, minHeight = 56.dp)
+                .defaultMinSize(minWidth = 56.dp, minHeight = 56.dp)
+                .animateContentSize(animationSpec = tween(300))
         ) {
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {
@@ -91,13 +100,36 @@ fun NeonGoogleButton(
                     contentDescription = "Google logo"
                 )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                if (!isLoading && !isSuccessAnimationActive) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                } else if (isLoading) {
+                    Spacer(modifier = Modifier.width(12.dp))
+                }
 
-                Text(
-                    text = stringResource(R.string.login_google),
-                    color = Color.White,
-                    fontSize = 18.sp
-                )
+                AnimatedVisibility(
+                    visible = !isLoading && !isSuccessAnimationActive,
+                    enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 300))
+                ) {
+                    Text(
+                        text = stringResource(R.string.login_google),
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                    )
+                }
+
+                AnimatedVisibility(
+                    visible = isLoading,
+                    enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 300))
+                ) {
+                    CircularProgressIndicator(
+                        color = shiftedColors.last(),
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
             }
         }
     }

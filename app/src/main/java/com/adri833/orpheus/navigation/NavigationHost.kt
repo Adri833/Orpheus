@@ -18,7 +18,7 @@ fun NavigationHost() {
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = Routes.Splash.route,
+        startDestination = Routes.Home.route,
     ) {
 
         // Navegacion de la pantalla Splash
@@ -34,7 +34,13 @@ fun NavigationHost() {
 
         // Navegacion de la pantalla Login
         composable(route = Routes.Login.route) {
-            LoginScreen()
+            LoginScreen(
+                navigationToHome = {
+                    navController.navigate(Routes.Home.route) {
+                        popUpTo(Routes.Login.route) { inclusive = true }
+                    }
+                }
+            )
         }
 
         // Navegacion de la pantalla Home

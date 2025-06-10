@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">Orpheus</string>
-    <string name="web_client" translatable="false">722671315950-uo4opanfjhrtltkuaiu01qiuhs0s87as.apps.googleusercontent.com</string>
 
     <string name="login_google">Iniciar sesión con Google</string>
     <string name="login_success">Bienvenido</string>
 
     // Mensajes de error
-    <string name="error_login">Error al iniciar sesión</string>
+    <string name="error_unknown">Error desconocido</string>
+    <string name="error_login">Error al iniciar sesión</string>
+    <string name="error_parsing_token">Error al procesar el token</string>
+    <string name="unrecognized_credential">Credencial no reconocida</string>
+    <string name="invalid_credential">Credencial no válida</string>
 </resources>
