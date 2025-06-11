@@ -11,10 +11,11 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor() {
+class AuthRepository @Inject constructor(
+    private val auth: FirebaseAuth
+) {
 
-    private val auth = FirebaseAuth.getInstance()
-
+    // Login with Google
     suspend fun loginWithGoogle(context: Context) {
         val credentialManager = CredentialManager.create(context)
 

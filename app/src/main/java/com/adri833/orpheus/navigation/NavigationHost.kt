@@ -18,7 +18,7 @@ fun NavigationHost() {
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = Routes.Home.route,
+        startDestination = Routes.Login.route,
     ) {
 
         // Navegacion de la pantalla Splash

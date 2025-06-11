@@ -11,8 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.adri833.orpheus.components.OrpheusLogo
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -35,7 +33,6 @@ import com.adri833.orpheus.components.adjustForMobile
 import com.adri833.orpheus.ui.background.LiraAnimatedBackground
 import com.adri833.orpheus.util.UiState
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -43,30 +40,8 @@ fun LoginScreen(
     navigationToHome: () -> Unit
 ) {
     val context = LocalContext.current
-    val logoOffsetY = remember { Animatable(0f) }
-    var showText by remember { mutableStateOf(false) }
-    var showButton by remember { mutableStateOf(false) }
-    var showLira by remember { mutableStateOf(false) }
     val loginState by viewModel.loginState
-
-    // Estados de salida del boton
-    val buttonExitScale = remember { Animatable(1f) }
-    val contentAlpha = remember { Animatable(1f) }
-    var performExitAnimation by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        delay(1000L)
-        logoOffsetY.animateTo(
-            targetValue = -180f,
-            animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
-        )
-        delay(300L)
-        showText = true
-        delay(600L)
-        showButton = true
-        delay(800L)
-        showLira = true
-    }
+    val animationState = rememberLoginAnimationState(loginState)
 
     LaunchedEffect(loginState) {
         when (loginState) {
@@ -76,29 +51,10 @@ fun LoginScreen(
                 viewModel.resetState()
             }
             UiState.Success -> {
-                performExitAnimation = true
-                showButton = false
-
-                delay(1000)
-
-                launch {
-                    buttonExitScale.animateTo(
-                        targetValue = 20f,
-                        animationSpec = tween(durationMillis = 1200, easing = EaseIn)
-                    )
-                }
-
-                launch {
-                    contentAlpha.animateTo(
-                        targetValue = 0f,
-                        animationSpec = tween(durationMillis = 400, delayMillis = 200)
-                    )
-                }
-
                 delay(1200)
                 navigationToHome()
             }
-            else -> {}
+            else -> Unit
         }
     }
 
@@ -107,12 +63,12 @@ fun LoginScreen(
             .fillMaxSize()
             .background(Color.Black)
             .adjustForMobile()
-            .graphicsLayer(alpha = contentAlpha.value),
+            .graphicsLayer(alpha = animationState.contentAlpha.value),
         contentAlignment = Alignment.Center
     ) {
 
         AnimatedVisibility(
-            visible = showLira && !performExitAnimation,
+            visible = animationState.showLira.value && !animationState.performExitAnimation.value,
             enter = slideInHorizontally(
                 initialOffsetX = { fullWidth -> -fullWidth },
                 animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing)
@@ -123,13 +79,13 @@ fun LoginScreen(
         }
 
         AnimatedVisibility(
-            visible = !performExitAnimation,
+            visible = !animationState.performExitAnimation.value,
             enter = fadeIn(animationSpec = tween(durationMillis = 0)),
             exit = fadeOut(animationSpec = tween(durationMillis = 1000, delayMillis = 0))
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.offset(y = logoOffsetY.value.dp)
+                modifier = Modifier.offset(y = animationState.logoOffsetY.value.dp)
             ) {
                 OrpheusLogo(
                     modifier = Modifier.size(180.dp)
@@ -137,7 +93,7 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                AnimatedVisibility(visible = showText) {
+                AnimatedVisibility(animationState.showText.value) {
                     WavyText(stringResource(R.string.app_name))
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -145,24 +101,24 @@ fun LoginScreen(
         }
 
         AnimatedVisibility(
-            visible = showButton || performExitAnimation,
+            visible = animationState.showButton.value || animationState.performExitAnimation.value,
             enter = fadeIn(animationSpec = tween(durationMillis = 800)),
             modifier = Modifier
                 .align(Alignment.Center)
                 .offset(y = 60.dp)
                 .graphicsLayer(
-                    scaleX = buttonExitScale.value,
-                    scaleY = buttonExitScale.value
+                    scaleX = animationState.buttonExitScale.value,
+                    scaleY = animationState.buttonExitScale.value
                 )
         ) {
             NeonGoogleButton(
-                isLoading = loginState is UiState.Loading && !performExitAnimation,
-                enabled = loginState !is UiState.Loading && !performExitAnimation,
-                isSuccessAnimationActive = performExitAnimation,
+                isLoading = loginState is UiState.Loading && !animationState.performExitAnimation.value,
+                enabled = loginState !is UiState.Loading && !animationState.performExitAnimation.value,
+                isSuccessAnimationActive = animationState.performExitAnimation.value,
                 onClick = {
                     // Solo permite el click si no estamos en la animación de salida
-                    if (!performExitAnimation) {
-                        viewModel.loginWithGoogle(context)
+                    if (!animationState.performExitAnimation.value) {
+                        viewModel.loginWithGoogle()
                     }
                 }
             )
