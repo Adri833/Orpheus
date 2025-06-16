@@ -77,5 +77,7 @@ dependencies {
 
     // Navigation
     implementation(libs.accompanist.navigation.animation)
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.coil.compose)
 
 }

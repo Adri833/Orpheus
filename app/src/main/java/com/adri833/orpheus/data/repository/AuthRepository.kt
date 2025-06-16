@@ -1,6 +1,7 @@
 package com.adri833.orpheus.data.repository
 
 import android.content.Context
+import android.net.Uri
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import com.adri833.orpheus.constants.OrpheusConstants.GOOGLE_ID
@@ -32,5 +33,10 @@ class AuthRepository @Inject constructor(
         val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
 
         auth.signInWithCredential(firebaseCredential).await()
+    }
+
+    // Profile Picture
+    fun getProfilePictureUrl(): Uri? {
+        return auth.currentUser?.photoUrl
     }
 }

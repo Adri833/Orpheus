@@ -84,7 +84,11 @@ fun NeonGoogleButton(
     ) {
         Button(
             onClick = onClick,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+            enabled = enabled,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Black,
+                disabledContainerColor = Color.Black,
+            ),
             shape = RoundedCornerShape(50),
             modifier = Modifier
                 .defaultMinSize(minWidth = 56.dp, minHeight = 56.dp)

@@ -3,10 +3,19 @@
 package com.adri833.orpheus.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.adri833.orpheus.components.BottomBar
+import com.adri833.orpheus.screens.downloader.DownloaderScreen
+import com.adri833.orpheus.screens.drive.DriveScreen
 import com.adri833.orpheus.screens.home.HomeScreen
+import com.adri833.orpheus.screens.library.LibraryScreen
 import com.adri833.orpheus.screens.login.LoginScreen
+import com.adri833.orpheus.screens.search.SearchScreen
 import com.adri833.orpheus.screens.splash.SplashScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -15,37 +24,77 @@ import com.google.accompanist.navigation.animation.composable
 @Composable
 fun NavigationHost() {
     val navController = rememberNavController()
+    val navBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry.value?.destination?.route
 
-    AnimatedNavHost(
-        navController = navController,
-        startDestination = Routes.Login.route,
-    ) {
+    val showBottomBar = currentRoute in listOf(
+        Routes.Home.route,
+        Routes.Search.route,
+        Routes.Library.route,
+        Routes.Drive.route,
+        Routes.Downloader.route
+    )
 
-        // Navegacion de la pantalla Splash
-        composable(route = Routes.Splash.route) {
-            SplashScreen(
-                navigationToLogin = {
-                    navController.navigate(Routes.Login.route) {
-                        popUpTo(Routes.Splash.route) { inclusive = true }
-                    }
-                }
-            )
+    Scaffold(
+        bottomBar = {
+            if (showBottomBar) {
+                BottomBar(navController)
+            }
         }
+    ) { paddingValues ->
 
-        // Navegacion de la pantalla Login
-        composable(route = Routes.Login.route) {
-            LoginScreen(
-                navigationToHome = {
-                    navController.navigate(Routes.Home.route) {
-                        popUpTo(Routes.Login.route) { inclusive = true }
+        AnimatedNavHost(
+            navController = navController,
+            startDestination = Routes.Splash.route,
+            modifier = Modifier.padding(paddingValues)
+        ) {
+
+            // Navegacion de la pantalla Splash
+            composable(route = Routes.Splash.route) {
+                SplashScreen(
+                    navigationToLogin = {
+                        navController.navigate(Routes.Login.route) {
+                            popUpTo(Routes.Splash.route) { inclusive = true }
+                        }
                     }
-                }
-            )
-        }
+                )
+            }
 
-        // Navegacion de la pantalla Home
-        composable(route = Routes.Home.route) {
-            HomeScreen()
+            // Navegacion de la pantalla Login
+            composable(route = Routes.Login.route) {
+                LoginScreen(
+                    navigationToHome = {
+                        navController.navigate(Routes.Home.route) {
+                            popUpTo(Routes.Login.route) { inclusive = true }
+                        }
+                    }
+                )
+            }
+
+            // Navegacion de la pantalla Home
+            composable(route = Routes.Home.route) {
+                HomeScreen()
+            }
+
+            // Navegacion de la pantalla Search
+            composable(Routes.Search.route) {
+                SearchScreen()
+            }
+
+            // Navegacion de la pantalla Library
+            composable(Routes.Library.route) {
+                LibraryScreen()
+            }
+
+            // Navegacion de la pantalla Drive
+            composable(Routes.Drive.route) {
+                DriveScreen()
+            }
+
+            // Navegacion de la pantalla Downloader
+            composable(Routes.Downloader.route) {
+                DownloaderScreen()
+            }
         }
     }
 }

@@ -38,7 +38,7 @@ fun rememberLoginAnimationState(loginState: UiState<Unit>): LoginAnimationState 
             delay(1000)
 
             launch {
-                buttonExitScale.animateTo(20f, tween(1200, easing = EaseIn))
+                buttonExitScale.animateTo(25f, tween(1200, easing = EaseIn))
             }
 
             launch {

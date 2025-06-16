@@ -42,16 +42,18 @@ fun LoginScreen(
     val context = LocalContext.current
     val loginState by viewModel.loginState
     val animationState = rememberLoginAnimationState(loginState)
+    var isButtonClicked by remember { mutableStateOf(false) }
 
     LaunchedEffect(loginState) {
         when (loginState) {
             is UiState.Error -> {
+                isButtonClicked = false
                 val message = (loginState as UiState.Error).message
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 viewModel.resetState()
             }
             UiState.Success -> {
-                delay(1200)
+                delay(1600)
                 navigationToHome()
             }
             else -> Unit
@@ -113,13 +115,11 @@ fun LoginScreen(
         ) {
             NeonGoogleButton(
                 isLoading = loginState is UiState.Loading && !animationState.performExitAnimation.value,
-                enabled = loginState !is UiState.Loading && !animationState.performExitAnimation.value,
+                enabled = !isButtonClicked && loginState !is UiState.Loading && !animationState.performExitAnimation.value,
                 isSuccessAnimationActive = animationState.performExitAnimation.value,
                 onClick = {
-                    // Solo permite el click si no estamos en la animación de salida
-                    if (!animationState.performExitAnimation.value) {
-                        viewModel.loginWithGoogle()
-                    }
+                    isButtonClicked = true
+                    viewModel.loginWithGoogle()
                 }
             )
         }
