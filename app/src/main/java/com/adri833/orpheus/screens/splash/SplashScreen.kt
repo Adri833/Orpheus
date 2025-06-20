@@ -14,13 +14,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.adri833.orpheus.components.OrpheusLogo
+import com.adri833.orpheus.screens.login.LoginViewModel
 import com.adri833.orpheus.ui.background.PentagramAnimation
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    navigationToLogin: () -> Unit
+    navigationToLogin: () -> Unit,
+    navigationToHome: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val alphaAnim = remember { Animatable(0f) }
 
@@ -33,7 +37,11 @@ fun SplashScreen(
             )
         )
         delay(750)
-        navigationToLogin()
+        if (viewModel.isUserLoggedIn()) {
+            navigationToHome()
+        } else {
+            navigationToLogin()
+        }
     }
 
     Box(

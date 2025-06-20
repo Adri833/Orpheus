@@ -16,7 +16,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
+import com.adri833.orpheus.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -52,11 +56,17 @@ fun BottomBar(navController: NavController) {
                     Icon(
                         painter = if (selected) item.filledIcon else item.outlinedIcon,
                         tint = if (selected) Color.White else Color.Gray,
-                        contentDescription = item.label,
+                        contentDescription = stringResource(item.label),
                         modifier = Modifier.size((24 * scale.value).dp)
                     )
                 },
-                label = { Text(text = item.label, fontSize = 10.sp) },
+                label = {
+                    Text(
+                        text = stringResource(item.label),
+                        fontFamily = FontFamily(Font(R.font.merriweather_bold)),
+                        fontSize = 10.sp
+                    )
+                },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color.White,
                     unselectedIconColor = Color.Gray,

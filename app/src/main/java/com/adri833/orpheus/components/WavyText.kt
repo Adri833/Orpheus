@@ -47,7 +47,7 @@ fun WavyText(
             Text(
                 text = char.toString(),
                 color = Gold,
-                fontSize = 50.sp,
+                fontSize = 54.sp,
                 fontFamily = PlayFairDisplay_SemiBold,
                 modifier = Modifier
                     .offset(y = offsetY.value.dp)

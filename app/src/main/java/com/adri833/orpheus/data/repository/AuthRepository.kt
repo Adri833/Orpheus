@@ -8,6 +8,7 @@ import com.adri833.orpheus.constants.OrpheusConstants.GOOGLE_ID
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -15,6 +16,10 @@ import javax.inject.Inject
 class AuthRepository @Inject constructor(
     private val auth: FirebaseAuth
 ) {
+
+    fun getCurrentUser(): FirebaseUser? {
+        return FirebaseAuth.getInstance().currentUser
+    }
 
     // Login with Google
     suspend fun loginWithGoogle(context: Context) {
@@ -39,4 +44,10 @@ class AuthRepository @Inject constructor(
     fun getProfilePictureUrl(): Uri? {
         return auth.currentUser?.photoUrl
     }
+
+    // Username
+    fun getUserName(): String? {
+        return auth.currentUser?.displayName
+    }
+
 }

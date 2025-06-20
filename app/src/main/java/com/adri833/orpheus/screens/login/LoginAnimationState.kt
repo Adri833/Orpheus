@@ -7,7 +7,7 @@ data class LoginAnimationState(
     val logoOffsetY: Animatable<Float, *>,
     val showText: MutableState<Boolean>,
     val showButton: MutableState<Boolean>,
-    val showLira: MutableState<Boolean>,
+//    val showLira: MutableState<Boolean>,
     val buttonExitScale: Animatable<Float, *>,
     val contentAlpha: Animatable<Float, *>,
     val performExitAnimation: MutableState<Boolean>

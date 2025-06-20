@@ -10,4 +10,16 @@
     <string name="error_parsing_token">Error parsing token</string>
     <string name="unrecognized_credential">Unrecognized credential</string>
     <string name="invalid_credential">Invalid credential</string>
+
+    // Bottom navigation
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="playlist">Playlist</string>
+    <string name="drive">Drive</string>
+    <string name="youtube">YT</string>
+
+    // Greetings
+    <string name="good_morning">Good morning</string>
+    <string name="good_afternoon">Good afternoon</string>
+    <string name="good_night">Good evening</string>
 </resources>

@@ -22,13 +22,13 @@ fun rememberLoginAnimationState(loginState: UiState<Unit>): LoginAnimationState 
 
     LaunchedEffect(Unit) {
         delay(1000L)
-        logoOffsetY.animateTo(-180f, tween(600, easing = FastOutSlowInEasing))
+        logoOffsetY.animateTo(-80f, tween(600, easing = FastOutSlowInEasing))
         delay(300)
         showText.value = true
         delay(600)
         showButton.value = true
-        delay(800)
-        showLira.value = true
+//        delay(800)
+//        showLira.value = true
     }
 
     LaunchedEffect(loginState) {
@@ -50,7 +50,7 @@ fun rememberLoginAnimationState(loginState: UiState<Unit>): LoginAnimationState 
     }
 
     return LoginAnimationState(
-        logoOffsetY, showText, showButton, showLira,
+        logoOffsetY, showText, showButton, //showLira,
         buttonExitScale, contentAlpha, performExitAnimation
     )
 }

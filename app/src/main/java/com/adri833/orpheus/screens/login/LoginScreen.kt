@@ -69,16 +69,16 @@ fun LoginScreen(
         contentAlignment = Alignment.Center
     ) {
 
-        AnimatedVisibility(
-            visible = animationState.showLira.value && !animationState.performExitAnimation.value,
-            enter = slideInHorizontally(
-                initialOffsetX = { fullWidth -> -fullWidth },
-                animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing)
-            ),
-            exit = fadeOut(animationSpec = tween(durationMillis = 1000, delayMillis = 0))
-        ) {
-            LiraAnimatedBackground()
-        }
+//        AnimatedVisibility(
+//            visible = animationState.showLira.value && !animationState.performExitAnimation.value,
+//            enter = slideInHorizontally(
+//                initialOffsetX = { fullWidth -> -fullWidth },
+//                animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing)
+//            ),
+//            exit = fadeOut(animationSpec = tween(durationMillis = 1000, delayMillis = 0))
+//        ) {
+//            LiraAnimatedBackground()
+//        }
 
         AnimatedVisibility(
             visible = !animationState.performExitAnimation.value,
@@ -98,30 +98,30 @@ fun LoginScreen(
                 AnimatedVisibility(animationState.showText.value) {
                     WavyText(stringResource(R.string.app_name))
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
 
-        AnimatedVisibility(
-            visible = animationState.showButton.value || animationState.performExitAnimation.value,
-            enter = fadeIn(animationSpec = tween(durationMillis = 800)),
-            modifier = Modifier
-                .align(Alignment.Center)
-                .offset(y = 60.dp)
-                .graphicsLayer(
-                    scaleX = animationState.buttonExitScale.value,
-                    scaleY = animationState.buttonExitScale.value
-                )
-        ) {
-            NeonGoogleButton(
-                isLoading = loginState is UiState.Loading && !animationState.performExitAnimation.value,
-                enabled = !isButtonClicked && loginState !is UiState.Loading && !animationState.performExitAnimation.value,
-                isSuccessAnimationActive = animationState.performExitAnimation.value,
-                onClick = {
-                    isButtonClicked = true
-                    viewModel.loginWithGoogle()
+                Spacer(modifier = Modifier.height(30.dp))
+
+                AnimatedVisibility(
+                    visible = animationState.showButton.value || animationState.performExitAnimation.value,
+                    enter = fadeIn(animationSpec = tween(durationMillis = 800)),
+                    modifier = Modifier
+                        .offset(y = 60.dp)
+                        .graphicsLayer(
+                            scaleX = animationState.buttonExitScale.value,
+                            scaleY = animationState.buttonExitScale.value
+                        )
+                ) {
+                    NeonGoogleButton(
+                        isLoading = loginState is UiState.Loading && !animationState.performExitAnimation.value,
+                        enabled = !isButtonClicked && loginState !is UiState.Loading && !animationState.performExitAnimation.value,
+                        isSuccessAnimationActive = animationState.performExitAnimation.value,
+                        onClick = {
+                            isButtonClicked = true
+                            viewModel.loginWithGoogle()
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 }

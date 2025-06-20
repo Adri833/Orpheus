@@ -43,4 +43,8 @@ class LoginViewModel @Inject constructor(
     fun resetState() {
         _loginState.value = UiState.Idle
     }
+
+    fun isUserLoggedIn(): Boolean {
+        return authRepository.getCurrentUser() != null
+    }
 }

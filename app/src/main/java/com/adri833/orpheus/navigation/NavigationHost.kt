@@ -2,11 +2,18 @@
 
 package com.adri833.orpheus.navigation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.adri833.orpheus.components.BottomBar
@@ -30,15 +37,23 @@ fun NavigationHost() {
     val showBottomBar = currentRoute in listOf(
         Routes.Home.route,
         Routes.Search.route,
-        Routes.Library.route,
+        Routes.Playlist.route,
         Routes.Drive.route,
         Routes.Downloader.route
     )
 
     Scaffold(
         bottomBar = {
-            if (showBottomBar) {
-                BottomBar(navController)
+            Box(
+                modifier = Modifier
+                    .height(80.dp)
+            ) {
+                AnimatedVisibility(
+                    visible = showBottomBar,
+                    enter = fadeIn(tween(1000)),
+                ) {
+                    BottomBar(navController)
+                }
             }
         }
     ) { paddingValues ->
@@ -50,10 +65,19 @@ fun NavigationHost() {
         ) {
 
             // Navegacion de la pantalla Splash
-            composable(route = Routes.Splash.route) {
+            composable(
+                route = Routes.Splash.route,
+                enterTransition = { fadeIn(animationSpec = tween(500)) },
+                exitTransition = { fadeOut(animationSpec = tween(500)) }
+            ) {
                 SplashScreen(
                     navigationToLogin = {
                         navController.navigate(Routes.Login.route) {
+                            popUpTo(Routes.Splash.route) { inclusive = true }
+                        }
+                    },
+                    navigationToHome = {
+                        navController.navigate(Routes.Home.route) {
                             popUpTo(Routes.Splash.route) { inclusive = true }
                         }
                     }
@@ -61,7 +85,10 @@ fun NavigationHost() {
             }
 
             // Navegacion de la pantalla Login
-            composable(route = Routes.Login.route) {
+            composable(
+                route = Routes.Login.route,
+                enterTransition = { fadeIn(animationSpec = tween(4500)) },
+            ) {
                 LoginScreen(
                     navigationToHome = {
                         navController.navigate(Routes.Home.route) {
@@ -72,7 +99,11 @@ fun NavigationHost() {
             }
 
             // Navegacion de la pantalla Home
-            composable(route = Routes.Home.route) {
+            composable(
+                route = Routes.Home.route,
+                enterTransition = { fadeIn(animationSpec = tween(1000)) },
+                exitTransition = { fadeOut(animationSpec = tween(500)) }
+            ) {
                 HomeScreen()
             }
 
@@ -82,7 +113,7 @@ fun NavigationHost() {
             }
 
             // Navegacion de la pantalla Library
-            composable(Routes.Library.route) {
+            composable(Routes.Playlist.route) {
                 LibraryScreen()
             }
 
