@@ -13,44 +13,50 @@ import kotlinx.coroutines.launch
 fun rememberLoginAnimationState(loginState: UiState<Unit>): LoginAnimationState {
     val logoOffsetY = remember { Animatable(0f) }
     val showText = remember { mutableStateOf(false) }
+    val showText2 = remember { mutableStateOf(false) }
     val showButton = remember { mutableStateOf(false) }
-    val showLira = remember { mutableStateOf(false) }
-
+    val buttonOffsetY = remember { Animatable(160f) }
     val buttonExitScale = remember { Animatable(1f) }
     val contentAlpha = remember { Animatable(1f) }
     val performExitAnimation = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         delay(1000L)
-        logoOffsetY.animateTo(-80f, tween(600, easing = FastOutSlowInEasing))
+        logoOffsetY.animateTo(-110f, tween(600, easing = FastOutSlowInEasing))
         delay(300)
         showText.value = true
-        delay(600)
+        delay(1200)
+        showText2.value = true
+        delay(1600)
         showButton.value = true
-//        delay(800)
-//        showLira.value = true
     }
 
     LaunchedEffect(loginState) {
         if (loginState is UiState.Success) {
             performExitAnimation.value = true
             showButton.value = false
+
+            launch {
+                buttonOffsetY.animateTo(
+                    targetValue = 60f,
+                    animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing)
+                )
+                delay(300)
+                val scaleJob = launch {
+                    buttonExitScale.animateTo(5f, tween(800, easing = EaseIn))
+                }
+                val alphaJob = launch {
+                    contentAlpha.animateTo(0f, tween(800))
+                }
+                scaleJob.join()
+                alphaJob.join()
+            }
             delay(1000)
-
-            launch {
-                buttonExitScale.animateTo(25f, tween(1200, easing = EaseIn))
-            }
-
-            launch {
-                contentAlpha.animateTo(0f, tween(400, delayMillis = 200))
-            }
-
-            delay(1200)
         }
     }
 
     return LoginAnimationState(
-        logoOffsetY, showText, showButton, //showLira,
-        buttonExitScale, contentAlpha, performExitAnimation
+        logoOffsetY, showText, showText2, showButton,
+        buttonExitScale, contentAlpha, performExitAnimation, buttonOffsetY,
     )
 }

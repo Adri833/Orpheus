@@ -10,6 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adri833.orpheus.ui.theme.Gold
@@ -19,14 +23,24 @@ import kotlinx.coroutines.delay
 @Composable
 fun WavyText(
     text: String,
-    delayPerChar: Long = 100L
+    fontSize: Int,
+    delayPerChar: Long
 ) {
+    val gradientBrush = Brush.linearGradient(
+        colors = listOf(
+            Gold.copy(alpha = 0.8f),
+            Gold,
+            Gold.copy(alpha = 0.8f)
+        ),
+        start = Offset(0f, 0f),
+        end = Offset(100f, 100f)
+    )
 
     Row {
         text.forEachIndexed { index, char ->
             val offsetY = remember { Animatable(0f) }
 
-            LaunchedEffect(Unit) {
+            LaunchedEffect(index) {
                 delay(index * delayPerChar)
                 offsetY.animateTo(
                     targetValue = -10f,
@@ -46,11 +60,18 @@ fun WavyText(
 
             Text(
                 text = char.toString(),
-                color = Gold,
-                fontSize = 54.sp,
+                fontSize = fontSize.sp,
                 fontFamily = PlayFairDisplay_SemiBold,
-                modifier = Modifier
-                    .offset(y = offsetY.value.dp)
+                modifier = Modifier.offset(y = offsetY.value.dp),
+                style = TextStyle(
+                    brush = gradientBrush,
+                    shadow = Shadow(
+                        color = Gold.copy(alpha = 0.6f),
+                        offset = Offset(0f, 0f),
+                        blurRadius = 24f
+                    ),
+                    letterSpacing = 1.sp,
+                )
             )
         }
     }

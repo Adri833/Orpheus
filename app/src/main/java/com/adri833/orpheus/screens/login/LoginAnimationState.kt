@@ -6,9 +6,10 @@ import androidx.compose.runtime.MutableState
 data class LoginAnimationState(
     val logoOffsetY: Animatable<Float, *>,
     val showText: MutableState<Boolean>,
+    val showText2: MutableState<Boolean>,
     val showButton: MutableState<Boolean>,
-//    val showLira: MutableState<Boolean>,
     val buttonExitScale: Animatable<Float, *>,
     val contentAlpha: Animatable<Float, *>,
-    val performExitAnimation: MutableState<Boolean>
+    val performExitAnimation: MutableState<Boolean>,
+    val buttonOffsetY: Animatable<Float, *>
 )

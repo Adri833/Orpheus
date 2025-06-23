@@ -3,6 +3,7 @@
 
     <string name="login_google">Iniciar sesión con Google</string>
     <string name="login_success">Bienvenido</string>
+    <string name="slogan">Toda tu música, estés donde estés</string>
 
     // Mensajes de error
     <string name="error_unknown">Error desconocido</string>

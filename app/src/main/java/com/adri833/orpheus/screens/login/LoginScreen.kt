@@ -11,15 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.adri833.orpheus.components.OrpheusLogo
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.graphicsLayer
@@ -30,7 +29,6 @@ import com.adri833.orpheus.R
 import com.adri833.orpheus.components.NeonGoogleButton
 import com.adri833.orpheus.components.WavyText
 import com.adri833.orpheus.components.adjustForMobile
-import com.adri833.orpheus.ui.background.LiraAnimatedBackground
 import com.adri833.orpheus.util.UiState
 import kotlinx.coroutines.delay
 
@@ -52,10 +50,12 @@ fun LoginScreen(
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 viewModel.resetState()
             }
+
             UiState.Success -> {
-                delay(1600)
+                delay(1800)
                 navigationToHome()
             }
+
             else -> Unit
         }
     }
@@ -68,18 +68,6 @@ fun LoginScreen(
             .graphicsLayer(alpha = animationState.contentAlpha.value),
         contentAlignment = Alignment.Center
     ) {
-
-//        AnimatedVisibility(
-//            visible = animationState.showLira.value && !animationState.performExitAnimation.value,
-//            enter = slideInHorizontally(
-//                initialOffsetX = { fullWidth -> -fullWidth },
-//                animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing)
-//            ),
-//            exit = fadeOut(animationSpec = tween(durationMillis = 1000, delayMillis = 0))
-//        ) {
-//            LiraAnimatedBackground()
-//        }
-
         AnimatedVisibility(
             visible = !animationState.performExitAnimation.value,
             enter = fadeIn(animationSpec = tween(durationMillis = 0)),
@@ -87,7 +75,10 @@ fun LoginScreen(
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.offset(y = animationState.logoOffsetY.value.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(align = Alignment.Center)
+                    .offset(y = animationState.logoOffsetY.value.dp)
             ) {
                 OrpheusLogo(
                     modifier = Modifier.size(180.dp)
@@ -96,32 +87,37 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 AnimatedVisibility(animationState.showText.value) {
-                    WavyText(stringResource(R.string.app_name))
+                    WavyText(stringResource(R.string.app_name), delayPerChar = 100L ,fontSize = 54)
                 }
 
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                AnimatedVisibility(
-                    visible = animationState.showButton.value || animationState.performExitAnimation.value,
-                    enter = fadeIn(animationSpec = tween(durationMillis = 800)),
-                    modifier = Modifier
-                        .offset(y = 60.dp)
-                        .graphicsLayer(
-                            scaleX = animationState.buttonExitScale.value,
-                            scaleY = animationState.buttonExitScale.value
-                        )
-                ) {
-                    NeonGoogleButton(
-                        isLoading = loginState is UiState.Loading && !animationState.performExitAnimation.value,
-                        enabled = !isButtonClicked && loginState !is UiState.Loading && !animationState.performExitAnimation.value,
-                        isSuccessAnimationActive = animationState.performExitAnimation.value,
-                        onClick = {
-                            isButtonClicked = true
-                            viewModel.loginWithGoogle()
-                        }
-                    )
+                AnimatedVisibility(animationState.showText2.value) {
+                    WavyText(stringResource(R.string.slogan), delayPerChar = 30L ,fontSize = 20)
                 }
             }
+        }
+
+        AnimatedVisibility(
+            visible = animationState.showButton.value || animationState.performExitAnimation.value,
+            enter = fadeIn(animationSpec = tween(durationMillis = 800)),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .offset(y = animationState.buttonOffsetY.value.dp)
+                .graphicsLayer(
+                    scaleX = animationState.buttonExitScale.value,
+                    scaleY = animationState.buttonExitScale.value
+                )
+        ) {
+            NeonGoogleButton(
+                isLoading = loginState is UiState.Loading && !animationState.performExitAnimation.value,
+                enabled = !isButtonClicked && loginState !is UiState.Loading && !animationState.performExitAnimation.value,
+                isSuccessAnimationActive = animationState.performExitAnimation.value,
+                onClick = {
+                    isButtonClicked = true
+                    viewModel.loginWithGoogle()
+                }
+            )
         }
     }
 }
