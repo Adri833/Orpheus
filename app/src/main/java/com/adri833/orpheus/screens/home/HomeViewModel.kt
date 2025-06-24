@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
 
         val greeting = when (currentHour) {
             in 6..11 -> context.getString(R.string.good_morning)
-            in 12..19 -> context.getString(R.string.good_afternoon)
+            in 12..20 -> context.getString(R.string.good_afternoon)
             else -> context.getString(R.string.good_night)
         }
 

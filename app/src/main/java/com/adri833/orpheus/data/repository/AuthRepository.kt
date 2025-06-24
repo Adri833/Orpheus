@@ -47,7 +47,7 @@ class AuthRepository @Inject constructor(
 
     // Username
     fun getUserName(): String? {
-        return auth.currentUser?.displayName
+        return auth.currentUser?.displayName?.trim()?.split(" ")?.firstOrNull()
     }
 
 }

@@ -23,4 +23,10 @@
     <string name="good_morning">Good morning</string>
     <string name="good_afternoon">Good afternoon</string>
     <string name="good_night">Good evening</string>
+
+    // Home buttons
+    <string name="canciones">Songs</string>
+    <string name="albumes">Albums</string>
+    <string name="artistas">Artists</string>
+    <string name="carpetas">Folders</string>
 </resources>
