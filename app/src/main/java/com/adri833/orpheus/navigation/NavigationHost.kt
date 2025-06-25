@@ -4,6 +4,7 @@ package com.adri833.orpheus.navigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -24,8 +25,8 @@ import com.adri833.orpheus.screens.library.LibraryScreen
 import com.adri833.orpheus.screens.login.LoginScreen
 import com.adri833.orpheus.screens.search.SearchScreen
 import com.adri833.orpheus.screens.splash.SplashScreen
-import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -46,7 +47,7 @@ fun NavigationHost() {
         bottomBar = {
             Box(
                 modifier = Modifier
-                    .height(80.dp)
+                    .height(100.dp)
             ) {
                 AnimatedVisibility(
                     visible = showBottomBar,
@@ -67,8 +68,8 @@ fun NavigationHost() {
             // Navegacion de la pantalla Splash
             composable(
                 route = Routes.Splash.route,
-                enterTransition = { fadeIn(animationSpec = tween(500)) },
-                exitTransition = { fadeOut(animationSpec = tween(500)) }
+                enterTransition = { fadeIn(animationSpec = tween(1500, easing = FastOutSlowInEasing)) },
+                exitTransition = { fadeOut(animationSpec = tween(1200, easing = FastOutSlowInEasing)) }
             ) {
                 SplashScreen(
                     navigationToLogin = {
@@ -87,7 +88,7 @@ fun NavigationHost() {
             // Navegacion de la pantalla Login
             composable(
                 route = Routes.Login.route,
-                enterTransition = { fadeIn(animationSpec = tween(4500)) },
+                enterTransition = { fadeIn(animationSpec = tween(5000, easing = FastOutSlowInEasing)) },
             ) {
                 LoginScreen(
                     navigationToHome = {
@@ -101,8 +102,15 @@ fun NavigationHost() {
             // Navegacion de la pantalla Home
             composable(
                 route = Routes.Home.route,
-                enterTransition = { fadeIn(animationSpec = tween(1000)) },
-                exitTransition = { fadeOut(animationSpec = tween(500)) }
+                enterTransition = {
+                    when (initialState.destination.route) {
+                        Routes.Splash.route -> fadeIn(animationSpec = tween(1200, easing = FastOutSlowInEasing))
+                        else -> fadeIn(animationSpec = tween(600, easing = FastOutSlowInEasing))
+                    }
+                },
+                exitTransition = {
+                    fadeOut(animationSpec = tween(600, easing = FastOutSlowInEasing))
+                }
             ) {
                 HomeScreen()
             }

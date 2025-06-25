@@ -1,5 +1,14 @@
 package com.adri833.orpheus.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -16,12 +25,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import com.adri833.orpheus.R
 import com.adri833.orpheus.ui.pulseScale
+import com.adri833.orpheus.utils.noRippleClickable
 
 @Composable
 fun BottomBar(navController: NavController) {
@@ -31,48 +42,51 @@ fun BottomBar(navController: NavController) {
 
     var pressedRoute by remember { mutableStateOf<String?>(null) }
 
-    NavigationBar(
-        containerColor = Color.Black,
-        contentColor = Color.White
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Black),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         bottomNavItems.forEach { item ->
             val selected = currentRoute == item.route
             val isPressed = pressedRoute == item.route
-            val scale = pulseScale(isPressed) {
+            val scale = pulseScale(isPressed, 0.8f) {
                 pressedRoute = null
             }
 
-            NavigationBarItem(
-                selected = selected,
-                onClick = {
-                    if (!selected) {
-                        navController.navigate(item.route) {
-                            launchSingleTop = true
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .noRippleClickable {
+                        if (!selected) {
+                            navController.navigate(item.route) {
+                                launchSingleTop = true
+                            }
                         }
+                        pressedRoute = item.route
                     }
-                    pressedRoute = item.route
-                },
-                icon = {
+                    .padding(vertical = 8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size((24 * scale).dp)
+                ) {
                     Icon(
                         painter = if (selected) item.filledIcon else item.outlinedIcon,
-                        tint = if (selected) Color.White else Color.Gray,
                         contentDescription = stringResource(item.label),
-                        modifier = Modifier.size((24 * scale).dp)
+                        tint = if (selected) Color.White else Color.Gray,
+                        modifier = Modifier.fillMaxSize()
                     )
-                },
-                label = {
-                    Text(
-                        text = stringResource(item.label),
-                        fontFamily = FontFamily(Font(R.font.merriweather_bold)),
-                        fontSize = 10.sp
-                    )
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.White,
-                    unselectedIconColor = Color.Gray,
-                    indicatorColor = Color.Transparent
+                }
+                Text(
+                    text = stringResource(item.label),
+                    fontFamily = FontFamily(Font(R.font.merriweather_bold)),
+                    fontSize = 10.sp,
+                    color = if (selected) Color.White else Color.Gray
                 )
-            )
+            }
         }
     }
 }

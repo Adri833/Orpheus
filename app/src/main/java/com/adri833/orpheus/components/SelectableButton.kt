@@ -16,7 +16,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.adri833.orpheus.ui.pulseScaleSlim
+import com.adri833.orpheus.ui.pulseScale
+import com.adri833.orpheus.ui.theme.DarkGray
 import com.adri833.orpheus.ui.theme.Gold
 
 @Composable
@@ -26,12 +27,12 @@ fun SelectableButton(
     onClick: () -> Unit
 ) {
     var pressed by remember { mutableStateOf(false) }
-    val scale = pulseScaleSlim(pressed) {
+    val scale = pulseScale(pressed) {
         pressed = false
     }
 
     Surface(
-        color = if (isSelected) Gold else Color(0xFF2C2C2C),
+        color = if (isSelected) Gold else DarkGray,
         shape = RoundedCornerShape(50),
         modifier = Modifier
             .graphicsLayer {

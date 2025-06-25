@@ -68,7 +68,7 @@ fun WavyText(
                     shadow = Shadow(
                         color = Gold.copy(alpha = 0.6f),
                         offset = Offset(0f, 0f),
-                        blurRadius = 24f
+                        blurRadius = 12f
                     ),
                     letterSpacing = 1.sp,
                 )

@@ -28,8 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.adri833.orpheus.R
 import com.adri833.orpheus.components.NeonGoogleButton
 import com.adri833.orpheus.components.WavyText
-import com.adri833.orpheus.components.adjustForMobile
-import com.adri833.orpheus.util.UiState
+import com.adri833.orpheus.utils.UiState
 import kotlinx.coroutines.delay
 
 @Composable
@@ -64,7 +63,6 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .adjustForMobile()
             .graphicsLayer(alpha = animationState.contentAlpha.value),
         contentAlignment = Alignment.Center
     ) {
@@ -100,7 +98,6 @@ fun LoginScreen(
 
         AnimatedVisibility(
             visible = animationState.showButton.value || animationState.performExitAnimation.value,
-            enter = fadeIn(animationSpec = tween(durationMillis = 800)),
             modifier = Modifier
                 .align(Alignment.Center)
                 .offset(y = animationState.buttonOffsetY.value.dp)
@@ -115,7 +112,7 @@ fun LoginScreen(
                 isSuccessAnimationActive = animationState.performExitAnimation.value,
                 onClick = {
                     isButtonClicked = true
-                    viewModel.loginWithGoogle()
+                    viewModel.loginWithGoogle(context)
                 }
             )
         }

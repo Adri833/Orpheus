@@ -8,22 +8,20 @@ import androidx.compose.runtime.State
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.viewModelScope
 import com.adri833.orpheus.R
-import com.adri833.orpheus.util.UiState
+import com.adri833.orpheus.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _loginState = mutableStateOf<UiState<Unit>>(UiState.Idle)
     val loginState: State<UiState<Unit>> get() = _loginState
 
-    fun loginWithGoogle() {
+    fun loginWithGoogle(context: Context) {
         _loginState.value = UiState.Loading
 
         viewModelScope.launch {

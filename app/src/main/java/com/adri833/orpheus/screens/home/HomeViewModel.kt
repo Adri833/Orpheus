@@ -3,10 +3,16 @@ package com.adri833.orpheus.screens.home
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.adri833.orpheus.R
 import com.adri833.orpheus.data.repository.AuthRepository
+import com.adri833.orpheus.data.repository.SongRepository
+import com.adri833.orpheus.domain.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 import java.time.ZoneId
 import javax.inject.Inject
@@ -14,8 +20,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val songRepository: SongRepository,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
+
+    private val _songs = MutableStateFlow<List<Song>>(emptyList())
+    val songs: StateFlow<List<Song>> = _songs
 
     fun getProfilePicture(): Uri? {
         return authRepository.getProfilePictureUrl()
@@ -35,5 +45,20 @@ class HomeViewModel @Inject constructor(
         }
 
         return "$greeting, ${getUserName() ?: ""}"
+    }
+
+    fun logout() {
+        authRepository.logout()
+    }
+
+    fun loadSongs() {
+        viewModelScope.launch {
+            val list = songRepository.getSongs()
+            _songs.value = list
+        }
+    }
+
+    fun playSong(song: Song) {
+        // TODO Lógica para reproducir la canción con ExoPlayer (más adelante)
     }
 }

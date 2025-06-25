@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Orpheus</string>
 
+    <string name="slogan">All your music, wherever you are</string>
     <string name="login_google">Sign in with Google</string>
     <string name="login_success">Welcome</string>
-    <string name="slogan">All your music, wherever you are</string>
+    <string name="logout">Logout</string>
 
     // Error messages
     <string name="error_unknown">Unknown error</string>
@@ -11,7 +12,7 @@
     <string name="error_parsing_token">Error parsing token</string>
     <string name="unrecognized_credential">Unrecognized credential</string>
     <string name="invalid_credential">Invalid credential</string>
-
+    <string name="access_denied">Access denied, please allow storage access</string>
     // Bottom navigation
     <string name="home">Home</string>
     <string name="search">Search</string>

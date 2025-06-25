@@ -50,4 +50,9 @@ class AuthRepository @Inject constructor(
         return auth.currentUser?.displayName?.trim()?.split(" ")?.firstOrNull()
     }
 
+    // Logout
+    fun logout() {
+        auth.signOut()
+    }
+
 }

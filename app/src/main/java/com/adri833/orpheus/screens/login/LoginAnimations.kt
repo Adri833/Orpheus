@@ -5,7 +5,7 @@ import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
-import com.adri833.orpheus.util.UiState
+import com.adri833.orpheus.utils.UiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -21,7 +21,7 @@ fun rememberLoginAnimationState(loginState: UiState<Unit>): LoginAnimationState 
     val performExitAnimation = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(1000)
+        delay(1200)
         logoOffsetY.animateTo(-110f, tween(600, easing = FastOutSlowInEasing))
         delay(300)
         showText.value = true
