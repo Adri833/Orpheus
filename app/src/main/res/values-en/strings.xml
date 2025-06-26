@@ -30,4 +30,8 @@
     <string name="albumes">Albums</string>
     <string name="artistas">Artists</string>
     <string name="carpetas">Folders</string>
+
+    // Permissions
+    <string name="permission_audio_description">Permission is needed to access local audio\n\nEnable it manually from\n</string>
+    <string name="permission_audio_path">Settings &gt; Apps &gt; Permissions</string>
 </resources>

@@ -1,13 +1,9 @@
-@file:Suppress("DEPRECATION")
-
 package com.adri833.orpheus.navigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,8 +21,9 @@ import com.adri833.orpheus.screens.library.LibraryScreen
 import com.adri833.orpheus.screens.login.LoginScreen
 import com.adri833.orpheus.screens.search.SearchScreen
 import com.adri833.orpheus.screens.splash.SplashScreen
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.adri833.orpheus.utils.adjustForMobile
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -45,21 +42,24 @@ fun NavigationHost() {
 
     Scaffold(
         bottomBar = {
-            Box(
-                modifier = Modifier
-                    .height(100.dp)
-            ) {
+            Box(modifier = Modifier.adjustForMobile()) {
                 AnimatedVisibility(
                     visible = showBottomBar,
                     enter = fadeIn(tween(1000)),
                 ) {
                     BottomBar(navController)
                 }
+
+                if (!showBottomBar) {
+                    Box(modifier = Modifier
+                        .height(65.dp)
+                    )
+                }
             }
         }
     ) { paddingValues ->
 
-        AnimatedNavHost(
+        NavHost(
             navController = navController,
             startDestination = Routes.Home.route,
             modifier = Modifier.padding(paddingValues)
@@ -68,8 +68,6 @@ fun NavigationHost() {
             // Navegacion de la pantalla Splash
             composable(
                 route = Routes.Splash.route,
-                enterTransition = { fadeIn(animationSpec = tween(1500, easing = FastOutSlowInEasing)) },
-                exitTransition = { fadeOut(animationSpec = tween(1200, easing = FastOutSlowInEasing)) }
             ) {
                 SplashScreen(
                     navigationToLogin = {
@@ -88,7 +86,6 @@ fun NavigationHost() {
             // Navegacion de la pantalla Login
             composable(
                 route = Routes.Login.route,
-                enterTransition = { fadeIn(animationSpec = tween(5000, easing = FastOutSlowInEasing)) },
             ) {
                 LoginScreen(
                     navigationToHome = {
@@ -102,15 +99,6 @@ fun NavigationHost() {
             // Navegacion de la pantalla Home
             composable(
                 route = Routes.Home.route,
-                enterTransition = {
-                    when (initialState.destination.route) {
-                        Routes.Splash.route -> fadeIn(animationSpec = tween(1200, easing = FastOutSlowInEasing))
-                        else -> fadeIn(animationSpec = tween(600, easing = FastOutSlowInEasing))
-                    }
-                },
-                exitTransition = {
-                    fadeOut(animationSpec = tween(600, easing = FastOutSlowInEasing))
-                }
             ) {
                 HomeScreen()
             }

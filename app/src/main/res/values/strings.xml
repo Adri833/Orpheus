@@ -31,4 +31,8 @@
     <string name="albumes">Álbumes</string>
     <string name="artistas">Artistas</string>
     <string name="carpetas">Carpetas</string>
+
+    // Permisos
+    <string name="permission_audio_description">Se necesita permiso para acceder al audio local\n\nActívalo manualmente desde\n</string>
+    <string name="permission_audio_path">Ajustes &gt; Aplicaciones &gt; Permisos</string>
 </resources>

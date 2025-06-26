@@ -1,6 +1,7 @@
 package com.adri833.orpheus.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.adri833.orpheus.R
@@ -33,7 +35,7 @@ fun SongItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(vertical = 8.dp)
             .clickable { onClick(song) },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -46,17 +48,17 @@ fun SongItem(
             painter = painter,
             contentDescription = "Carátula álbum",
             modifier = Modifier
-                .size(48.dp)
-                .clip(RoundedCornerShape(4.dp)),
+                .size(56.dp)
+                .clip(RoundedCornerShape(10.dp)),
             contentScale = ContentScale.Crop
         )
 
         Spacer(modifier = Modifier.width(12.dp))
 
         Column {
-            Text(text = song.title, fontWeight = FontWeight.Bold, color = Color.White)
-            Text(text = song.artist, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
-            Text(text = song.album, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+            Text(text = song.title, fontWeight = FontWeight.Bold, color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = song.artist, style = MaterialTheme.typography.bodyMedium, color = Color.Gray, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = song.album, style = MaterialTheme.typography.bodySmall, color = Color.Gray, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }

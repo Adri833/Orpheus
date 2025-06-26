@@ -3,28 +3,30 @@ package com.adri833.orpheus.domain.handler
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
+import com.adri833.orpheus.ui.DeniedPermissionUI
 
 @Composable
-fun RequestAudioPermission(
-    onGranted: () -> Unit
+fun AudioPermissionHandler(
+    contentIfGranted: @Composable () -> Unit
 ) {
     val context = LocalContext.current
+    var permissionGranted by remember { mutableStateOf(false) }
+    var requestedOnce by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if (isGranted) {
-            onGranted()
-        } else {
-            Toast.makeText(context, "Permiso denegado", Toast.LENGTH_SHORT).show()
-        }
+        permissionGranted = isGranted
     }
 
     LaunchedEffect(Unit) {
@@ -34,13 +36,20 @@ fun RequestAudioPermission(
                 Manifest.permission.READ_MEDIA_AUDIO
             ) == PackageManager.PERMISSION_GRANTED
 
-            if (!granted) {
+            permissionGranted = granted
+
+            if (!granted && !requestedOnce) {
                 launcher.launch(Manifest.permission.READ_MEDIA_AUDIO)
-            } else {
-                onGranted()
+                requestedOnce = true
             }
         } else {
-            onGranted()
+            permissionGranted = true
         }
+    }
+
+    if (permissionGranted) {
+        contentIfGranted()
+    } else {
+        DeniedPermissionUI()
     }
 }
