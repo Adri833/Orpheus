@@ -5,6 +5,7 @@
     <string name="login_google">Iniciar sesión con Google</string>
     <string name="login_success">Bienvenido</string>
     <string name="logout">Cerrar sesión</string>
+    <string name="shuffle">Aleatorio</string>
 
     // Mensajes de error
     <string name="error_unknown">Error desconocido</string>
@@ -13,6 +14,7 @@
     <string name="unrecognized_credential">Credencial no reconocida</string>
     <string name="invalid_credential">Credencial no válida</string>
     <string name="access_denied">Acceso denegado, por favor permite el acceso al almacenamiento</string>
+    <string name="no_songs_found">No se encontraron canciones dentro de la carpeta de Music</string>
 
     // Navegacion inferior
     <string name="home">Home</string>
@@ -35,4 +37,5 @@
     // Permisos
     <string name="permission_audio_description">Se necesita permiso para acceder al audio local\n\nActívalo manualmente desde\n</string>
     <string name="permission_audio_path">Ajustes &gt; Aplicaciones &gt; Permisos</string>
+    <string name="open_settings">Abrir ajustes</string>
 </resources>

@@ -7,6 +7,7 @@ import android.provider.MediaStore
 import com.adri833.orpheus.domain.model.Song
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 class SongRepository @Inject constructor(
     @ApplicationContext private val context: Context
@@ -57,7 +58,7 @@ class SongRepository @Inject constructor(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     id.toString()
                 )
-                val albumArtUri = Uri.parse("content://media/external/audio/albumart/$albumId")
+                val albumArtUri = "content://media/external/audio/albumart/$albumId".toUri()
 
                 songs.add(Song(id, title, album, artist, albumArtUri, contentUri))
             }

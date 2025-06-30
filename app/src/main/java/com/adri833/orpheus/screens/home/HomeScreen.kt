@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -38,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.adri833.orpheus.R
 import com.adri833.orpheus.components.SelectableButton
+import com.adri833.orpheus.domain.handler.AudioPermissionHandler
 import com.adri833.orpheus.screens.home.contents.AlbumsContent
 import com.adri833.orpheus.screens.home.contents.ArtistsContent
 import com.adri833.orpheus.screens.home.contents.FoldersContent
@@ -73,7 +73,7 @@ fun HomeScreen(
             .alpha(alphaAnim.value),
         verticalArrangement = Arrangement.Top,
     ) {
-        // Top part: greeting + image
+        // Greeting + image
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,7 +92,7 @@ fun HomeScreen(
 
             Box(
                 modifier = Modifier
-                    .clickable() { viewModel.logout() }
+                    .clickable { viewModel.logout() }
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(viewModel.getProfilePicture()),
@@ -104,11 +104,11 @@ fun HomeScreen(
             }
         }
 
-        // Button row
+        // Buttons row
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 28.dp),
+                .padding(bottom = 36.dp),
         ) {
             items(options.size) { name ->
                 SelectableButton(
@@ -119,13 +119,14 @@ fun HomeScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        when (selected) {
-            stringResource(R.string.canciones) -> SongsContent(viewModel)
-            stringResource(R.string.albumes) -> AlbumsContent(viewModel)
-            stringResource(R.string.artistas) -> ArtistsContent(viewModel)
-            stringResource(R.string.carpetas) -> FoldersContent(viewModel)
+        // Main content
+        AudioPermissionHandler {
+            when (selected) {
+                stringResource(R.string.canciones) -> SongsContent(viewModel)
+                stringResource(R.string.albumes) -> AlbumsContent(viewModel)
+                stringResource(R.string.artistas) -> ArtistsContent(viewModel)
+                stringResource(R.string.carpetas) -> FoldersContent(viewModel)
+            }
         }
     }
 }

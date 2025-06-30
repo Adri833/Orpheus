@@ -5,6 +5,7 @@
     <string name="login_google">Sign in with Google</string>
     <string name="login_success">Welcome</string>
     <string name="logout">Logout</string>
+    <string name="shuffle">Shuffle</string>
 
     // Error messages
     <string name="error_unknown">Unknown error</string>
@@ -13,6 +14,8 @@
     <string name="unrecognized_credential">Unrecognized credential</string>
     <string name="invalid_credential">Invalid credential</string>
     <string name="access_denied">Access denied, please allow storage access</string>
+    <string name="no_songs_found">No songs found in Music folder</string>
+
     // Bottom navigation
     <string name="home">Home</string>
     <string name="search">Search</string>
@@ -34,4 +37,5 @@
     // Permissions
     <string name="permission_audio_description">Permission is needed to access local audio\n\nEnable it manually from\n</string>
     <string name="permission_audio_path">Settings &gt; Apps &gt; Permissions</string>
+    <string name="open_settings">Open settings</string>
 </resources>

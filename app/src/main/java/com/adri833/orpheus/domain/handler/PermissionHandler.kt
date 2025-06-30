@@ -1,7 +1,5 @@
 package com.adri833.orpheus.domain.handler
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,8 +10,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat
 import com.adri833.orpheus.ui.DeniedPermissionUI
+import com.adri833.orpheus.utils.getAudioPermission
+import com.adri833.orpheus.utils.isAudioPermissionGranted
 
 @Composable
 fun AudioPermissionHandler(
@@ -31,15 +30,12 @@ fun AudioPermissionHandler(
 
     LaunchedEffect(Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val granted = ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_MEDIA_AUDIO
-            ) == PackageManager.PERMISSION_GRANTED
+            val granted = isAudioPermissionGranted(context)
 
             permissionGranted = granted
 
             if (!granted && !requestedOnce) {
-                launcher.launch(Manifest.permission.READ_MEDIA_AUDIO)
+                launcher.launch(getAudioPermission())
                 requestedOnce = true
             }
         } else {
@@ -50,6 +46,6 @@ fun AudioPermissionHandler(
     if (permissionGranted) {
         contentIfGranted()
     } else {
-        DeniedPermissionUI()
+        DeniedPermissionUI(onPermissionGranted = { permissionGranted = true })
     }
 }
