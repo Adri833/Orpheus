@@ -1,9 +1,10 @@
 package com.adri833.orpheus.screens.home.contents
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,32 +21,44 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.adri833.orpheus.R
+import com.adri833.orpheus.screens.player.PlayerViewModel
 
 @Composable
-fun SongsContent(viewModel: HomeViewModel) {
+fun SongsContent(
+    viewModel: HomeViewModel,
+    playerViewModel: PlayerViewModel = hiltViewModel()
+) {
     val songs by viewModel.songs.collectAsState(initial = emptyList())
 
     LaunchedEffect(Unit) {
         viewModel.loadSongs()
     }
 
-    Column {
-        Text(
-            text = stringResource(R.string.shuffle),
-            color = Color.Red,
-            fontSize = 20.sp,
-            fontFamily = FontFamily(Font(R.font.merriweather_regular)),
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.shuffle),
+                color = Color.Red,
+                fontSize = 20.sp,
+                fontFamily = FontFamily(Font(R.font.merriweather_regular)),
+            )
+        }
 
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
             items(songs, key = { it.id }) { song ->
                 SongItem(song, onClick = { clickedSong ->
-                    viewModel.playSong(clickedSong)
+                    playerViewModel.playSong(clickedSong)
                 })
             }
         }

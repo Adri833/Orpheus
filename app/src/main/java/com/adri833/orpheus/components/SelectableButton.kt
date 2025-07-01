@@ -52,7 +52,7 @@ fun SelectableButton(
         Text(
             text = name,
             color = if (isSelected) Color.Black else Color.White,
-            fontSize = 13.sp,
+            fontSize = 15.sp,
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
         )
     }

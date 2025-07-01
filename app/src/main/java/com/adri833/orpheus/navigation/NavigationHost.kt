@@ -25,6 +25,7 @@ import com.adri833.orpheus.utils.adjustForMobile
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavigationHost() {
@@ -58,7 +59,6 @@ fun NavigationHost() {
             }
         }
     ) { paddingValues ->
-
         NavHost(
             navController = navController,
             startDestination = Routes.Home.route,

@@ -46,8 +46,10 @@ fun EmptySongsUI() {
             color = Color.White,
             fontSize = 18.sp,
             fontFamily = FontFamily(Font(R.font.merriweather_regular)),
-            lineHeight = 36.sp,
+            lineHeight = 32.sp,
             textAlign = TextAlign.Center,
         )
     }
+
+    // TODO: Boton para ir a Drive, sugerir paginas para descargar canciones...
 }

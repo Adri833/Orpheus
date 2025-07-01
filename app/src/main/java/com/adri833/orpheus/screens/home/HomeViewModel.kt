@@ -57,8 +57,4 @@ class HomeViewModel @Inject constructor(
             _songs.value = list
         }
     }
-
-    fun playSong(song: Song) {
-        // TODO Lógica para reproducir la canción con ExoPlayer
-    }
 }
