@@ -42,11 +42,13 @@ import com.adri833.orpheus.screens.home.contents.AlbumsContent
 import com.adri833.orpheus.screens.home.contents.ArtistsContent
 import com.adri833.orpheus.screens.home.contents.FoldersContent
 import com.adri833.orpheus.screens.home.contents.SongsContent
+import com.adri833.orpheus.screens.player.PlayerViewModel
 import com.adri833.orpheus.ui.ALPHA_VISIBLE
 import com.adri833.orpheus.ui.transitionFadeNormal
 
 @Composable
 fun HomeScreen(
+    playerViewModel: PlayerViewModel,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val options = listOf(
@@ -122,7 +124,7 @@ fun HomeScreen(
         // Main content
         AudioPermissionHandler {
             when (selected) {
-                stringResource(R.string.canciones) -> SongsContent(viewModel)
+                stringResource(R.string.canciones) -> SongsContent(viewModel = viewModel, playerViewModel = playerViewModel)
                 stringResource(R.string.albumes) -> AlbumsContent(viewModel)
                 stringResource(R.string.artistas) -> ArtistsContent(viewModel)
                 stringResource(R.string.carpetas) -> FoldersContent(viewModel)

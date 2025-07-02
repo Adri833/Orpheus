@@ -21,14 +21,13 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.adri833.orpheus.R
 import com.adri833.orpheus.screens.player.PlayerViewModel
 
 @Composable
 fun SongsContent(
     viewModel: HomeViewModel,
-    playerViewModel: PlayerViewModel = hiltViewModel()
+    playerViewModel: PlayerViewModel
 ) {
     val songs by viewModel.songs.collectAsState(initial = emptyList())
 

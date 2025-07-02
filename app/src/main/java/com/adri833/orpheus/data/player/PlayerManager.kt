@@ -12,7 +12,7 @@ import javax.inject.Singleton
 class PlayerManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    private val player: ExoPlayer by lazy {
+    val player: ExoPlayer by lazy {
         ExoPlayer.Builder(context).build()
     }
 

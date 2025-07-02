@@ -20,6 +20,7 @@ activityCompose = "1.10.1"
 composeBom = "2025.06.00"
 navigationCompose = "2.9.0"
 media3Exoplayer = "1.7.1"
+paletteKtx = "1.0.0"
 
 [libraries]
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
@@ -29,6 +30,7 @@ androidx-credentials-play-services-auth = { module = "androidx.credentials:crede
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-palette-ktx = { module = "androidx.palette:palette-ktx", version.ref = "paletteKtx" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }

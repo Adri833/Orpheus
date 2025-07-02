@@ -1,16 +1,18 @@
 package com.adri833.orpheus.navigation
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.adri833.orpheus.components.BottomBar
@@ -24,11 +26,16 @@ import com.adri833.orpheus.screens.splash.SplashScreen
 import com.adri833.orpheus.utils.adjustForMobile
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.adri833.orpheus.components.NowPlayingBar
+import com.adri833.orpheus.screens.player.PlayerViewModel
+import androidx.compose.runtime.*
 
 
-@OptIn(ExperimentalAnimationApi::class)
+
 @Composable
-fun NavigationHost() {
+fun NavigationHost(
+    playerViewModel: PlayerViewModel = hiltViewModel()
+) {
     val navController = rememberNavController()
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
@@ -43,18 +50,22 @@ fun NavigationHost() {
 
     Scaffold(
         bottomBar = {
-            Box(modifier = Modifier.adjustForMobile()) {
+            Column(modifier = Modifier.adjustForMobile()) {
+                val currentSong by playerViewModel.currentSong.collectAsState()
+
+                AnimatedVisibility(visible = currentSong != null) {
+                    NowPlayingBar(viewModel = playerViewModel)
+                }
+
                 AnimatedVisibility(
                     visible = showBottomBar,
-                    enter = fadeIn(tween(1000)),
+                    enter = fadeIn(tween(1000))
                 ) {
                     BottomBar(navController)
                 }
 
                 if (!showBottomBar) {
-                    Box(modifier = Modifier
-                        .height(65.dp)
-                    )
+                    Box(modifier = Modifier.height(65.dp))
                 }
             }
         }
@@ -100,7 +111,7 @@ fun NavigationHost() {
             composable(
                 route = Routes.Home.route,
             ) {
-                HomeScreen()
+                HomeScreen(playerViewModel)
             }
 
             // Navegacion de la pantalla Search
