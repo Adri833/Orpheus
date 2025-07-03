@@ -31,7 +31,6 @@ import com.adri833.orpheus.screens.player.PlayerViewModel
 import androidx.compose.runtime.*
 
 
-
 @Composable
 fun NavigationHost(
     playerViewModel: PlayerViewModel = hiltViewModel()
@@ -45,7 +44,7 @@ fun NavigationHost(
         Routes.Search.route,
         Routes.Playlist.route,
         Routes.Drive.route,
-        Routes.Downloader.route
+        Routes.Downloader.route,
     )
 
     Scaffold(

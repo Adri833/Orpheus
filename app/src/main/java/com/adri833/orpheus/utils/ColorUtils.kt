@@ -54,3 +54,11 @@ fun isColorDark(color: Color): Boolean {
     val luminance = 0.2126 * color.red + 0.7152 * color.green + 0.0722 * color.blue
     return luminance < 0.1
 }
+
+fun Color.adaptiveProgressBackground(): Color {
+    return if (!isColorDark(this)) {
+        this.darken(0.2f).copy(alpha = 0.5f)
+    } else {
+        this.copy(alpha = 0.4f)
+    }
+}

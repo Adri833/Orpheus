@@ -24,7 +24,7 @@ fun SongItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 10.dp)
+            .padding(vertical = 8.dp)
             .noRippleClickable(
                 onClick = { onClick(song) }
             ),

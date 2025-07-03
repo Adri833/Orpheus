@@ -25,6 +25,7 @@ import com.adri833.orpheus.ui.theme.Gray
 import com.adri833.orpheus.ui.theme.MediumGray
 import com.adri833.orpheus.utils.ArtistText
 import com.adri833.orpheus.utils.NameText
+import com.adri833.orpheus.utils.adaptiveProgressBackground
 import com.adri833.orpheus.utils.getDominantColor
 import com.adri833.orpheus.utils.isColorDark
 import com.adri833.orpheus.utils.lighten
@@ -65,7 +66,7 @@ fun NowPlayingBar(
             .clickable { /* TODO: Navegar a pantalla de reproducción completa */ },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AlbumCover(song, 64)
+        AlbumCover(song, 58)
 
         Spacer(modifier = Modifier.width(16.dp))
 
@@ -85,7 +86,7 @@ fun NowPlayingBar(
         ) {
             // Círculo de progreso (Stroke)
             Canvas(modifier = Modifier.fillMaxSize()) {
-                val strokeWidth = 3.dp.toPx()
+                val strokeWidth = 2.5.dp.toPx()
                 val diameter = size.minDimension - strokeWidth
                 val topLeft = Offset(
                     (size.width - diameter) / 2,
@@ -94,7 +95,7 @@ fun NowPlayingBar(
 
                 // Borde completo en gris claro
                 drawArc(
-                    color = borderColor,
+                    color = dominantColor.adaptiveProgressBackground(),
                     startAngle = -90f,
                     sweepAngle = 360f,
                     useCenter = false,

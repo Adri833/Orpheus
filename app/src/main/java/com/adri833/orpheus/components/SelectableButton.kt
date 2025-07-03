@@ -14,8 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.adri833.orpheus.R
 import com.adri833.orpheus.ui.pulseScale
 import com.adri833.orpheus.ui.theme.DarkGray
 import com.adri833.orpheus.ui.theme.Gold
@@ -41,7 +44,7 @@ fun SelectableButton(
             }
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onPress = {
+                    onTap = {
                         pressed = true
                         onClick()
                     }
@@ -52,7 +55,8 @@ fun SelectableButton(
         Text(
             text = name,
             color = if (isSelected) Color.Black else Color.White,
-            fontSize = 15.sp,
+            fontSize = 13.sp,
+            fontFamily = FontFamily(Font(R.font.merriweather_regular)),
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
         )
     }
