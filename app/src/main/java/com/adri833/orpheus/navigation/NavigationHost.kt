@@ -29,8 +29,12 @@ import androidx.navigation.compose.composable
 import com.adri833.orpheus.components.NowPlayingBar
 import com.adri833.orpheus.screens.player.PlayerViewModel
 import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
+import com.adri833.orpheus.components.PlaybackQueueBottomSheet
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationHost(
     playerViewModel: PlayerViewModel = hiltViewModel()
@@ -47,13 +51,20 @@ fun NavigationHost(
         Routes.Downloader.route,
     )
 
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showQueue by remember { mutableStateOf(false) }
+
+
     Scaffold(
         bottomBar = {
             Column(modifier = Modifier.adjustForMobile()) {
                 val currentSong by playerViewModel.currentSong.collectAsState()
 
                 AnimatedVisibility(visible = currentSong != null) {
-                    NowPlayingBar(viewModel = playerViewModel)
+                    NowPlayingBar(
+                        viewModel = playerViewModel,
+                        onQueueClick = { showQueue = true }
+                    )
                 }
 
                 AnimatedVisibility(
@@ -134,4 +145,12 @@ fun NavigationHost(
             }
         }
     }
+    if (showQueue) {
+        PlaybackQueueBottomSheet(
+            playerViewModel = playerViewModel,
+            sheetState = sheetState,
+            onDismissRequest = { showQueue = false }
+        )
+    }
+
 }

@@ -49,7 +49,7 @@ import com.adri833.orpheus.ui.transitionFadeNormal
 @Composable
 fun HomeScreen(
     playerViewModel: PlayerViewModel,
-    viewModel: HomeViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val options = listOf(
         stringResource(R.string.canciones),
@@ -65,6 +65,7 @@ fun HomeScreen(
             targetValue = ALPHA_VISIBLE,
             animationSpec = transitionFadeNormal
         )
+        homeViewModel.loadSongs()
     }
 
     Column(
@@ -84,7 +85,7 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = viewModel.getGreetingMessage(),
+                text = homeViewModel.getGreetingMessage(),
                 color = Color.White,
                 fontFamily = FontFamily(Font(R.font.merriweather_bold)),
                 fontSize = 20.sp
@@ -94,10 +95,10 @@ fun HomeScreen(
 
             Box(
                 modifier = Modifier
-                    .clickable { viewModel.logout() }
+                    .clickable { homeViewModel.logout() }
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(viewModel.getProfilePicture()),
+                    painter = rememberAsyncImagePainter(homeViewModel.getProfilePicture()),
                     contentDescription = "Profile Picture",
                     modifier = Modifier
                         .size(48.dp)
@@ -124,10 +125,10 @@ fun HomeScreen(
         // Main content
         AudioPermissionHandler {
             when (selected) {
-                stringResource(R.string.canciones) -> SongsContent(viewModel = viewModel, playerViewModel = playerViewModel)
-                stringResource(R.string.albumes) -> AlbumsContent(viewModel)
-                stringResource(R.string.artistas) -> ArtistsContent(viewModel)
-                stringResource(R.string.carpetas) -> FoldersContent(viewModel)
+                stringResource(R.string.canciones) -> SongsContent(homeViewModel, playerViewModel)
+                stringResource(R.string.albumes) -> AlbumsContent(homeViewModel)
+                stringResource(R.string.artistas) -> ArtistsContent(homeViewModel)
+                stringResource(R.string.carpetas) -> FoldersContent(homeViewModel)
             }
         }
     }

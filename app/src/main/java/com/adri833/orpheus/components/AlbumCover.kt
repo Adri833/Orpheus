@@ -18,10 +18,15 @@ fun AlbumCover(
     song: Song,
     size: Int = 56
 ) {
-    val painter = rememberAsyncImagePainter(
-        model = song.albumArt,
-        placeholder = painterResource(R.drawable.placeholder)
-    )
+    val painter = if (song.albumArt != null) {
+        rememberAsyncImagePainter(
+            model = song.albumArt,
+            placeholder = painterResource(R.drawable.placeholder),
+            error = painterResource(R.drawable.placeholder)
+        )
+    } else {
+        painterResource(R.drawable.placeholder)
+    }
 
     Image(
         painter = painter,

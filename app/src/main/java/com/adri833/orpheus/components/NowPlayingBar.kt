@@ -21,8 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.adri833.orpheus.screens.player.PlayerViewModel
-import com.adri833.orpheus.ui.theme.Gray
-import com.adri833.orpheus.ui.theme.MediumGray
 import com.adri833.orpheus.utils.ArtistText
 import com.adri833.orpheus.utils.NameText
 import com.adri833.orpheus.utils.adaptiveProgressBackground
@@ -35,6 +33,7 @@ import com.adri833.orpheus.utils.noRippleClickable
 @Composable
 fun NowPlayingBar(
     viewModel: PlayerViewModel,
+    onQueueClick: () -> Unit
 ) {
     val context = LocalContext.current
     val currentSong by viewModel.currentSong.collectAsState()
@@ -43,7 +42,6 @@ fun NowPlayingBar(
     val song = currentSong ?: return
     var dominantColor by remember { mutableStateOf(Color.LightGray) }
     val contentColor = if (isColorDark(dominantColor)) Color.White else Color.Black
-    val borderColor = if (contentColor == Color.White) Gray else MediumGray
 
     LaunchedEffect(song.contentUri) {
         dominantColor = getDominantColor(context, song.albumArt ?: song.contentUri)
@@ -93,7 +91,7 @@ fun NowPlayingBar(
                     (size.height - diameter) / 2
                 )
 
-                // Borde completo en gris claro
+                // Borde completo color dominante apagado
                 drawArc(
                     color = dominantColor.adaptiveProgressBackground(),
                     startAngle = -90f,
@@ -145,7 +143,7 @@ fun NowPlayingBar(
             modifier = Modifier
                 .size(30.dp)
                 .noRippleClickable(
-                    onClick = { /* TODO: Navegar a pantalla de cola de reproducción */ }
+                    onClick = { onQueueClick() }
                 )
         )
     }

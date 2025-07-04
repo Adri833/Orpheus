@@ -26,13 +26,15 @@ import com.adri833.orpheus.screens.player.PlayerViewModel
 
 @Composable
 fun SongsContent(
-    viewModel: HomeViewModel,
+    homeViewModel: HomeViewModel,
     playerViewModel: PlayerViewModel
 ) {
-    val songs by viewModel.songs.collectAsState(initial = emptyList())
+    val songs by homeViewModel.songs.collectAsState(initial = emptyList())
 
-    LaunchedEffect(Unit) {
-        viewModel.loadSongs()
+    LaunchedEffect(songs) {
+        if (songs.isNotEmpty()) {
+            playerViewModel.loadSongs(songs)
+        }
     }
 
     Column(
@@ -52,13 +54,11 @@ fun SongsContent(
             )
         }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(songs, key = { it.id }) { song ->
-                SongItem(song, onClick = { clickedSong ->
-                    playerViewModel.playSong(clickedSong)
-                })
+        LazyColumn {
+            items(songs) { song ->
+                SongItem(song) {
+                    playerViewModel.onSongSelected(song)
+                }
             }
         }
     }

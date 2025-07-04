@@ -6,6 +6,7 @@
     <string name="login_success">Bienvenido</string>
     <string name="logout">Cerrar sesión</string>
     <string name="shuffle">Aleatorio</string>
+    <string name="unknown">Desconocido</string>
 
     // Mensajes de error
     <string name="error_unknown">Error desconocido</string>

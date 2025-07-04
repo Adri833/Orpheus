@@ -9,17 +9,23 @@ import androidx.palette.graphics.Palette
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-suspend fun getDominantColor(context: Context, imageUri: Uri): Color {
-    return withContext(Dispatchers.IO) {
-        val bitmap = context.contentResolver.openInputStream(imageUri)?.use { inputStream ->
-            BitmapFactory.decodeStream(inputStream)
-        }
+suspend fun getDominantColor(context: Context, imageUri: Uri?): Color {
+    if (imageUri == null) return Color.LightGray
 
-        if (bitmap != null) {
-            val palette = Palette.from(bitmap).generate()
-            val dominantColor = palette.getDominantColor(Color.LightGray.toArgb())
-            Color(dominantColor)
-        } else {
+    return withContext(Dispatchers.IO) {
+        try {
+            val bitmap = context.contentResolver.openInputStream(imageUri)?.use { inputStream ->
+                BitmapFactory.decodeStream(inputStream)
+            }
+
+            if (bitmap != null) {
+                val palette = Palette.from(bitmap).generate()
+                val dominantColor = palette.getDominantColor(Color.LightGray.toArgb())
+                Color(dominantColor)
+            } else {
+                Color.LightGray
+            }
+        } catch (_: Exception) {
             Color.LightGray
         }
     }
