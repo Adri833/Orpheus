@@ -5,8 +5,11 @@
     <string name="login_google">Sign in with Google</string>
     <string name="login_success">Welcome</string>
     <string name="logout">Logout</string>
+
+    // Reproductor
     <string name="shuffle">Shuffle</string>
     <string name="unknown">Unknown</string>
+    <string name="queue">Queue</string>
 
     // Error messages
     <string name="error_unknown">Unknown error</string>

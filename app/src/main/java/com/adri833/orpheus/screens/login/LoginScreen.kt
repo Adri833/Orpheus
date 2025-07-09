@@ -1,6 +1,7 @@
 package com.adri833.orpheus.screens.login
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import com.adri833.orpheus.components.OrpheusLogo
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -84,20 +86,44 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                AnimatedVisibility(animationState.showText.value) {
-                    WavyText(stringResource(R.string.app_name), delayPerChar = 100L ,fontSize = 54)
+                AnimatedContent(
+                    targetState = animationState.showText.value,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(500)) togetherWith
+                                fadeOut(animationSpec = tween(300))
+                    },
+                    label = "AppNameFade"
+                ) { visible ->
+                    if (visible) {
+                        WavyText(stringResource(R.string.app_name), delayPerChar = 80L, fontSize = 54)
+                    } else {
+                        Spacer(Modifier.height(54.dp))
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                AnimatedVisibility(animationState.showText2.value) {
-                    WavyText(stringResource(R.string.slogan), delayPerChar = 30L ,fontSize = 20)
+                AnimatedContent(
+                    targetState = animationState.showText2.value,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(500)) togetherWith
+                                fadeOut(animationSpec = tween(300))
+                    },
+                    label = "SloganFade"
+                ) { visible ->
+                    if (visible) {
+                        WavyText(stringResource(R.string.slogan), delayPerChar = 30L, fontSize = 20)
+                    } else {
+                        Spacer(Modifier.height(20.dp))
+                    }
                 }
+
             }
         }
 
         AnimatedVisibility(
             visible = animationState.showButton.value || animationState.performExitAnimation.value,
+            enter = fadeIn(animationSpec = tween(durationMillis = 800)),
             modifier = Modifier
                 .align(Alignment.Center)
                 .offset(y = animationState.buttonOffsetY.value.dp)

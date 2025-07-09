@@ -1,34 +1,34 @@
 package com.adri833.orpheus.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adri833.orpheus.screens.player.PlayerViewModel
+import com.adri833.orpheus.R
+import com.adri833.orpheus.ui.theme.Gold
+import com.adri833.orpheus.utils.ArtistText
+import com.adri833.orpheus.utils.NameText
+import com.adri833.orpheus.utils.noRippleClickable
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlaybackQueueBottomSheet(
+fun PlaybackQueueContent(
     playerViewModel: PlayerViewModel,
-    sheetState: SheetState,
     onDismissRequest: () -> Unit
 ) {
     val queue by playerViewModel.queue.collectAsState()
     val currentIndex by playerViewModel.currentIndex.collectAsState()
+    val isPlaying by playerViewModel.isPlaying.collectAsState()
 
     val visibleQueue = remember(queue, currentIndex) {
         if (currentIndex in queue.indices) {
@@ -38,59 +38,90 @@ fun PlaybackQueueBottomSheet(
         }
     }
 
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        sheetState = sheetState,
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.8f),
-        dragHandle = {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    Modifier
-                        .size(width = 36.dp, height = 4.dp)
-                        .clip(RoundedCornerShape(2.dp))
-                        .background(Color.Gray.copy(alpha = 0.5f))
-                )
-            }
-        }
+            .padding(16.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("Cola de reproducción", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        Text(
+            text = stringResource(R.string.queue),
+            fontWeight = FontWeight.Bold,
+            fontSize = 22.sp
+        )
 
-            Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn {
-                itemsIndexed(visibleQueue) { index, song ->
-                    val isCurrent = index == 0
+        // Canción actual (fija arriba)
+        if (visibleQueue.isNotEmpty()) {
+            val currentSong = visibleQueue.first()
+            Surface(
+                tonalElevation = 1.dp,
+                shadowElevation = 6.dp,
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Transparent)
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AlbumCover(currentSong)
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 16.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            NowPlayingEqualizer(isPlaying = isPlaying)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            NameText(currentSong.title, color = Gold)
+                        }
+
+                        ArtistText(currentSong.artist)
+                    }
+
+                    PlayButton(
+                        isPlaying = playerViewModel.isPlaying,
+                        onPlayClick = { playerViewModel.playOrResume() },
+                        onPauseClick = { playerViewModel.pause() },
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+            }
+
+
+            // Resto de la cola (deslizable)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                itemsIndexed(visibleQueue.drop(1)) { index, song ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
-                            .background(
-                                if (isCurrent) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                                else Color.Transparent
-                            )
-                            .clickable {
-                                playerViewModel.onSongSelected(queue[currentIndex + index])
+                            .background(Color.Transparent)
+                            .noRippleClickable {
+                                playerViewModel.onSongSelected(queue[currentIndex + index + 1])
                             }
                             .padding(horizontal = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = if (isCurrent) Icons.Default.PlayArrow else Icons.Default.Build,
-                            contentDescription = null,
-                            tint = if (isCurrent) MaterialTheme.colorScheme.primary else LocalContentColor.current
-                        )
+                        AlbumCover(song)
+
                         Spacer(modifier = Modifier.width(12.dp))
+
                         Column {
-                            Text(song.title, fontWeight = FontWeight.Medium)
-                            Text(song.artist, style = MaterialTheme.typography.bodySmall)
+                            NameText(song.title, color = Color.White)
+                            ArtistText(song.artist)
                         }
                     }
                 }

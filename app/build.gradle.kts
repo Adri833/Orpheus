@@ -83,5 +83,6 @@ dependencies {
 
     implementation(libs.androidx.palette.ktx)
     implementation(libs.lottie.compose)
+    implementation(libs.material3)
 
 }

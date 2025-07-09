@@ -38,6 +38,8 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun onSongSelected(song: Song) {
+        val current = currentSong.value
+        if (current == song) return
         val all = _allSongs.value
         val startIndex = all.indexOf(song).coerceAtLeast(0)
         playerManager.setQueue(all, startIndex)

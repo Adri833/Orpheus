@@ -111,7 +111,6 @@ fun HomeScreen(
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 36.dp),
         ) {
             items(options.size) { name ->
                 SelectableButton(

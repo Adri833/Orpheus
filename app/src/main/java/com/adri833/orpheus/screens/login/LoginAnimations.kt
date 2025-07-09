@@ -21,11 +21,11 @@ fun rememberLoginAnimationState(loginState: UiState<Unit>): LoginAnimationState 
     val performExitAnimation = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(1200)
+        delay(400)
         logoOffsetY.animateTo(-110f, tween(600, easing = FastOutSlowInEasing))
         delay(300)
         showText.value = true
-        delay(1200)
+        delay(1100)
         showText2.value = true
         showButton.value = true
     }

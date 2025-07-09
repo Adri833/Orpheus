@@ -24,22 +24,23 @@ fun NowPlayingEqualizer(
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.equalizer))
     val progress = remember { Animatable(0f) }
 
-    LaunchedEffect(composition, isPlaying) {
+    LaunchedEffect(isPlaying, composition) {
         if (composition == null) return@LaunchedEffect
 
-        if (isPlaying) {
-            while (isActive) {
+        while (isActive) {
+            if (isPlaying) {
                 progress.animateTo(
                     targetValue = 1f,
                     animationSpec = tween(
-                        durationMillis = composition!!.duration.toInt(),
+                        durationMillis = ((1f - progress.value) * composition!!.duration).toInt(),
                         easing = LinearEasing
                     )
                 )
                 progress.snapTo(0f)
+            } else {
+                progress.stop()
+                break
             }
-        } else {
-            progress.stop()
         }
     }
 
