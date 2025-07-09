@@ -21,7 +21,5 @@ val BaseGoogleColors = listOf(
 
 val Gold = Color(0xFFD6A75C)
 
-val Gray = Color(0xFFD3D3D3)
-val MediumGray = Color(0xFF9E9E9E)
 val DarkGray = Color(0xFF2C2C2C)
 val LightGray = Color(0xFF5F5F5F)

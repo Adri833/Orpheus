@@ -82,5 +82,6 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(libs.androidx.palette.ktx)
+    implementation(libs.lottie.compose)
 
 }

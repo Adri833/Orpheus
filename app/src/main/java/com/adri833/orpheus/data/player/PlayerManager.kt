@@ -54,18 +54,14 @@ class PlayerManager @Inject constructor(
             val index = player.currentMediaItemIndex
             _currentIndex.value = index
             _currentSong.value = songQueue.getOrNull(index)
-
-            if (index in songQueue.indices) {
-                _queue.value = songQueue.subList(index, songQueue.size)
-            } else {
-                _queue.value = emptyList()
-            }
+            _queue.value = songQueue
         }
     }
 
     fun setQueue(songs: List<Song>, startIndex: Int = 0) {
         songQueue = songs
         _queue.value = songs
+
         val mediaItems = songs.map { it.toMediaItem() }
         val validIndex = startIndex.coerceIn(0, songs.lastIndex)
 
@@ -77,9 +73,19 @@ class PlayerManager @Inject constructor(
     }
 
     fun pause() = player.pause()
+
     fun resume() = player.play()
-    fun skipToNext() = player.seekToNext()
-    fun skipToPrevious() = player.seekToPrevious()
+
+    fun skipToNext() {
+        player.seekToNext()
+        player.play()
+    }
+
+    fun skipToPrevious() {
+        val index = player.currentMediaItemIndex
+        player.seekTo(if (index > 0) index - 1 else 0, 0L)
+        player.play()
+    }
 
     fun release() {
         player.removeListener(playerListener)
@@ -90,7 +96,7 @@ class PlayerManager @Inject constructor(
 
     private fun startProgressUpdates() {
         progressJob?.cancel()
-        progressJob = CoroutineScope(Dispatchers.Main).launch {
+        progressJob = CoroutineScope(Dispatchers.Main.immediate).launch {
             while (true) {
                 val dur = player.duration
                 val pos = player.currentPosition
@@ -102,7 +108,8 @@ class PlayerManager @Inject constructor(
 
     private fun stopProgressUpdates() {
         progressJob?.cancel()
+        progressJob = null
     }
 
-    private fun Song.toMediaItem(): MediaItem = MediaItem.fromUri(this.contentUri)
+    private fun Song.toMediaItem(): MediaItem = MediaItem.fromUri(contentUri)
 }

@@ -12,7 +12,8 @@ import androidx.compose.ui.res.stringResource
 import com.adri833.orpheus.R
 
 @Composable
-fun safeText(text: String?): String = if (text.isNullOrBlank()) stringResource(R.string.unknown) else text
+fun safeText(text: String?): String =
+    if (text.isNullOrBlank()) stringResource(R.string.unknown) else text
 
 @Composable
 fun NameText(name: String?, color: Color = Color.White, modifier: Modifier = Modifier) {

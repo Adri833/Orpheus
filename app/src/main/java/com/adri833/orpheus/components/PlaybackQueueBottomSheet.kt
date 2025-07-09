@@ -28,6 +28,15 @@ fun PlaybackQueueBottomSheet(
     onDismissRequest: () -> Unit
 ) {
     val queue by playerViewModel.queue.collectAsState()
+    val currentIndex by playerViewModel.currentIndex.collectAsState()
+
+    val visibleQueue = remember(queue, currentIndex) {
+        if (currentIndex in queue.indices) {
+            queue.subList(currentIndex, queue.size)
+        } else {
+            emptyList()
+        }
+    }
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -57,25 +66,26 @@ fun PlaybackQueueBottomSheet(
             Spacer(modifier = Modifier.height(12.dp))
 
             LazyColumn {
-                itemsIndexed(queue) { index, song ->
+                itemsIndexed(visibleQueue) { index, song ->
+                    val isCurrent = index == 0
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
                             .background(
-                                if (index == 0) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                                if (isCurrent) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                                 else Color.Transparent
                             )
                             .clickable {
-                                playerViewModel.onSongSelected(song, shuffle = false)
+                                playerViewModel.onSongSelected(queue[currentIndex + index])
                             }
                             .padding(horizontal = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = if (index == 0) Icons.Default.PlayArrow else Icons.Default.Build,
+                            imageVector = if (isCurrent) Icons.Default.PlayArrow else Icons.Default.Build,
                             contentDescription = null,
-                            tint = if (index == 0) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                            tint = if (isCurrent) MaterialTheme.colorScheme.primary else LocalContentColor.current
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {

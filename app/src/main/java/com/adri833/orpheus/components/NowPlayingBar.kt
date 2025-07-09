@@ -1,29 +1,27 @@
 package com.adri833.orpheus.components
 
-import androidx.compose.foundation.Canvas
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.adri833.orpheus.R
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adri833.orpheus.screens.player.PlayerViewModel
-import com.adri833.orpheus.utils.ArtistText
-import com.adri833.orpheus.utils.NameText
-import com.adri833.orpheus.utils.adaptiveProgressBackground
 import com.adri833.orpheus.utils.getDominantColor
 import com.adri833.orpheus.utils.isColorDark
 import com.adri833.orpheus.utils.lighten
@@ -40,11 +38,19 @@ fun NowPlayingBar(
     val isPlaying by viewModel.isPlaying.collectAsState()
     val progress by viewModel.playbackProgress.collectAsState()
     val song = currentSong ?: return
-    var dominantColor by remember { mutableStateOf(Color.LightGray) }
+
+    var targetColor by remember { mutableStateOf(Color.LightGray) }
+    val dominantColor by animateColorAsState(
+        targetValue = targetColor,
+        animationSpec = tween(durationMillis = 200)
+    )
+
     val contentColor = if (isColorDark(dominantColor)) Color.White else Color.Black
+    var totalDragX by remember { mutableFloatStateOf(0f) }
+    val forward by viewModel.isForward.collectAsState()
 
     LaunchedEffect(song.contentUri) {
-        dominantColor = getDominantColor(context, song.albumArt ?: song.contentUri)
+        targetColor = getDominantColor(context, song.albumArt ?: song.contentUri)
     }
 
     Row(
@@ -61,7 +67,24 @@ fun NowPlayingBar(
                 )
             )
             .padding(end = 12.dp)
-            .clickable { /* TODO: Navegar a pantalla de reproducción completa */ },
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragEnd = {
+                        if (totalDragX < -100f) {
+                            viewModel.skipToNext()
+                        } else if (totalDragX > 100f) {
+                            viewModel.skipToPrevious()
+                        }
+                        totalDragX = 0f
+                    },
+                    onDragCancel = { totalDragX = 0f },
+                    onDrag = { change, dragAmount ->
+                        totalDragX += dragAmount.x
+                        change.consume()
+                    }
+                )
+            }
+            .noRippleClickable { /* TODO: Navegar a pantalla de reproducción completa */ },
         verticalAlignment = Alignment.CenterVertically
     ) {
         AlbumCover(song, 58)
@@ -69,70 +92,38 @@ fun NowPlayingBar(
         Spacer(modifier = Modifier.width(16.dp))
 
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .clipToBounds()
         ) {
-            NameText(name = song.title, color = contentColor)
+            SlidingText(
+                text = song.title,
+                color = contentColor,
+                fontWeight = FontWeight.Bold,
+                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                forward = forward
+            )
 
-            ArtistText(artist = song.artist, color = contentColor)
+            SlidingText(
+                text = song.artist,
+                color = contentColor,
+                fontWeight = FontWeight.Normal,
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                forward = forward
+            )
         }
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        Box(
-            modifier = Modifier.size(36.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            // Círculo de progreso (Stroke)
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                val strokeWidth = 2.5.dp.toPx()
-                val diameter = size.minDimension - strokeWidth
-                val topLeft = Offset(
-                    (size.width - diameter) / 2,
-                    (size.height - diameter) / 2
-                )
-
-                // Borde completo color dominante apagado
-                drawArc(
-                    color = dominantColor.adaptiveProgressBackground(),
-                    startAngle = -90f,
-                    sweepAngle = 360f,
-                    useCenter = false,
-                    style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
-                    topLeft = topLeft,
-                    size = Size(diameter, diameter)
-                )
-
-                // Línea de progreso color contraste
-                drawArc(
-                    color = contentColor,
-                    startAngle = -90f,
-                    sweepAngle = 360 * progress,
-                    useCenter = false,
-                    style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
-                    topLeft = topLeft,
-                    size = Size(diameter, diameter)
-                )
+        ProgressIconButton(
+            isPlaying = isPlaying,
+            progress = progress,
+            backgroundColor = dominantColor,
+            contentColor = contentColor,
+            onClick = {
+                if (isPlaying) viewModel.pause() else viewModel.playOrResume()
             }
-
-
-            Icon(
-                painter = painterResource(id = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-                contentDescription = "Play/Pause",
-                tint = contentColor,
-                modifier = Modifier
-                    .size(22.dp)
-                    .noRippleClickable(
-                        onClick = {
-                            if (isPlaying) {
-                                viewModel.pause()
-                            } else {
-                                viewModel.resume()
-                            }
-                        }
-                    )
-
-            )
-        }
+        )
 
         Spacer(modifier = Modifier.width(16.dp))
 
@@ -142,9 +133,7 @@ fun NowPlayingBar(
             tint = contentColor,
             modifier = Modifier
                 .size(30.dp)
-                .noRippleClickable(
-                    onClick = { onQueueClick() }
-                )
+                .noRippleClickable { onQueueClick() }
         )
     }
 }
