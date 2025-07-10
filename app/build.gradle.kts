@@ -43,25 +43,31 @@ android {
 }
 
 dependencies {
-
+    // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.media3.exoplayer)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    implementation(libs.androidx.palette.ktx)
 
+    // Navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.accompanist.systemuicontroller)
+
+    // Media3 (solo estas 3)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.session)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -71,18 +77,18 @@ dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
-    implementation (libs.androidx.credentials)
-    implementation (libs.androidx.credentials.play.services.auth)
-    implementation (libs.googleid)
     implementation(libs.firebase.auth)
+    implementation(libs.googleid)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
 
-    // Navigation
-    implementation(libs.accompanist.navigation.animation)
-    implementation(libs.accompanist.systemuicontroller)
+    // Otros
     implementation(libs.coil.compose)
-
-    implementation(libs.androidx.palette.ktx)
     implementation(libs.lottie.compose)
-    implementation(libs.material3)
+    implementation(libs.animation)
 
+    // Tests
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }

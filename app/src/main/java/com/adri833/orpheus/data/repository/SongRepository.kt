@@ -20,10 +20,11 @@ class SongRepository @Inject constructor(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         }
 
-        val selection = "${MediaStore.Audio.Media.DATA} LIKE ?"
-        val selectionArgs = arrayOf("%/Music/%")
+         val selection = "${MediaStore.Audio.Media.DATA} LIKE ? OR ${MediaStore.Audio.Media.DATA} LIKE ?"
+         val selectionArgs = arrayOf("%/Music/%", "%/Download/%")
 
-        val projection = arrayOf(
+
+         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ALBUM,
@@ -64,6 +65,5 @@ class SongRepository @Inject constructor(
             }
         }
         return songs
-
     }
 }

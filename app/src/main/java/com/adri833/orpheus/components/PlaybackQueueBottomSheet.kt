@@ -1,5 +1,12 @@
 package com.adri833.orpheus.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,8 +28,9 @@ import com.adri833.orpheus.utils.ArtistText
 import com.adri833.orpheus.utils.NameText
 import com.adri833.orpheus.utils.noRippleClickable
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun PlaybackQueueContent(
+fun PlaybackQueueBottomSheet(
     playerViewModel: PlayerViewModel,
     onDismissRequest: () -> Unit
 ) {
@@ -51,53 +59,63 @@ fun PlaybackQueueContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Canción actual (fija arriba)
         if (visibleQueue.isNotEmpty()) {
             val currentSong = visibleQueue.first()
-            Surface(
-                tonalElevation = 1.dp,
-                shadowElevation = 6.dp,
-                shape = RoundedCornerShape(8.dp),
+
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 4.dp)
+                    .padding(bottom = 8.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Transparent)
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Surface(
+                    tonalElevation = 1.dp,
+                    shadowElevation = 6.dp,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    AlbumCover(currentSong)
+                    AnimatedContent(
+                        targetState = currentSong,
+                        transitionSpec = {
+                            (slideInVertically { it } + fadeIn()).togetherWith(slideOutVertically { -it } + fadeOut())
+                        },
+                        label = "NowPlayingAnimatedContent"
+                    ) { animatedSong ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.Transparent)
+                                .padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            AlbumCover(animatedSong)
 
-                    Spacer(modifier = Modifier.width(12.dp))
+                            Spacer(modifier = Modifier.width(12.dp))
 
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 16.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            NowPlayingEqualizer(isPlaying = isPlaying)
-                            Spacer(modifier = Modifier.width(6.dp))
-                            NameText(currentSong.title, color = Gold)
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(end = 16.dp)
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    NowPlayingEqualizer(isPlaying = isPlaying)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    NameText(animatedSong.title, color = Gold)
+                                }
+
+                                ArtistText(animatedSong.artist)
+                            }
+
+                            PlayButton(
+                                isPlaying = playerViewModel.isPlaying,
+                                onPlayClick = { playerViewModel.playOrResume() },
+                                onPauseClick = { playerViewModel.pause() },
+                                modifier = Modifier.size(40.dp)
+                            )
                         }
-
-                        ArtistText(currentSong.artist)
                     }
-
-                    PlayButton(
-                        isPlaying = playerViewModel.isPlaying,
-                        onPlayClick = { playerViewModel.playOrResume() },
-                        onPauseClick = { playerViewModel.pause() },
-                        modifier = Modifier.size(40.dp)
-                    )
                 }
             }
 
-
-            // Resto de la cola (deslizable)
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -110,7 +128,7 @@ fun PlaybackQueueContent(
                             .padding(vertical = 8.dp)
                             .background(Color.Transparent)
                             .noRippleClickable {
-                                playerViewModel.onSongSelected(queue[currentIndex + index + 1])
+                                playerViewModel.skipToIndex(currentIndex + index + 1)
                             }
                             .padding(horizontal = 8.dp),
                         verticalAlignment = Alignment.CenterVertically

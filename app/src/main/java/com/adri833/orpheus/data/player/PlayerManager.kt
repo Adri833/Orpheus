@@ -9,24 +9,24 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class PlayerManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-
     val player: ExoPlayer by lazy {
         ExoPlayer.Builder(context).build().apply {
             addListener(playerListener)
         }
     }
 
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val _currentSong = MutableStateFlow<Song?>(null)
     val currentSong: StateFlow<Song?> = _currentSong
 
@@ -42,7 +42,12 @@ class PlayerManager @Inject constructor(
     private val _queue = MutableStateFlow<List<Song>>(emptyList())
     val queue: StateFlow<List<Song>> = _queue
 
-    private var songQueue: List<Song> = emptyList()
+    private val _isShuffleEnabledFlow = MutableStateFlow(false)
+    val isShuffleEnabledFlow: StateFlow<Boolean> = _isShuffleEnabledFlow
+
+    private var originalQueue: MutableList<Song> = mutableListOf()
+    private var currentQueue: MutableList<Song> = mutableListOf()
+    private var isShuffleEnabled = false
     private var progressJob: Job? = null
 
     private val playerListener = object : Player.Listener {
@@ -53,23 +58,9 @@ class PlayerManager @Inject constructor(
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             val index = player.currentMediaItemIndex
             _currentIndex.value = index
-            _currentSong.value = songQueue.getOrNull(index)
-            _queue.value = songQueue
+            _currentSong.value = currentQueue.getOrNull(index)
+            _queue.value = currentQueue.toList()
         }
-    }
-
-    fun setQueue(songs: List<Song>, startIndex: Int = 0) {
-        songQueue = songs
-        _queue.value = songs
-
-        val mediaItems = songs.map { it.toMediaItem() }
-        val validIndex = startIndex.coerceIn(0, songs.lastIndex)
-
-        player.setMediaItems(mediaItems, validIndex, 0L)
-        player.prepare()
-        player.play()
-
-        startProgressUpdates()
     }
 
     fun pause() = player.pause()
@@ -80,6 +71,15 @@ class PlayerManager @Inject constructor(
         player.seekToNext()
         player.play()
     }
+
+    fun skipToIndex(index: Int) {
+        if (index in currentQueue.indices) {
+            player.seekTo(index, 0L)
+            _currentIndex.value = index
+            player.play()
+        }
+    }
+
 
     fun skipToPrevious() {
         val index = player.currentMediaItemIndex
@@ -92,16 +92,130 @@ class PlayerManager @Inject constructor(
         player.stop()
         player.release()
         stopProgressUpdates()
+        scope.cancel()
+    }
+
+    fun setQueue(songs: List<Song>, startIndex: Int = 0, autoPlay: Boolean = false) {
+        originalQueue = songs.toMutableList()
+        val selectedSong = songs.getOrNull(startIndex)
+
+        currentQueue = if (!isShuffleEnabled) {
+            songs.toMutableList()
+        } else {
+            val shuffled = songs.toMutableList().apply { remove(selectedSong) }.shuffled()
+            mutableListOf<Song>().apply {
+                selectedSong?.let { add(it) }
+                addAll(shuffled)
+            }
+        }
+
+        _queue.value = currentQueue.toList()
+        val newStartIndex = selectedSong?.let { currentQueue.indexOf(it) } ?: 0
+        setQueueInternal(newStartIndex, autoPlay)
+    }
+
+    private fun setQueueInternal(startIndex: Int, autoPlay: Boolean = false) {
+        _queue.value = currentQueue.toList()
+
+        val mediaItems = currentQueue.map { it.toMediaItem() }
+        val validIndex = startIndex.coerceIn(0, currentQueue.lastIndex)
+
+        player.setMediaItems(mediaItems, validIndex, 0L)
+        player.prepare()
+        if (autoPlay) player.play()
+
+        startProgressUpdates()
+    }
+
+    fun toggleShuffle() {
+        isShuffleEnabled = !isShuffleEnabled
+        _isShuffleEnabledFlow.value = isShuffleEnabled
+
+        if (originalQueue.isEmpty()) return
+
+        val currentSong = currentQueue.getOrNull(player.currentMediaItemIndex)
+        val currentPosition = player.currentPosition
+
+        currentQueue = if (isShuffleEnabled) {
+            val remainingSongs = originalQueue.filter { it != currentSong }.shuffled()
+            mutableListOf<Song>().apply {
+                currentSong?.let { add(it) }
+                addAll(remainingSongs)
+            }
+        } else {
+            originalQueue.toMutableList()
+        }
+
+        val startIndex = currentSong?.let { currentQueue.indexOf(it) } ?: 0
+        setQueueInternal(startIndex, autoPlay = player.isPlaying)
+        player.seekTo(startIndex, currentPosition)
+    }
+
+    fun addSongs(songsToAdd: List<Song>) {
+        originalQueue.addAll(songsToAdd)
+
+        currentQueue = if (isShuffleEnabled) {
+            val shuffledNew = songsToAdd.shuffled()
+            (currentQueue + shuffledNew).toMutableList()
+        } else {
+            (currentQueue + songsToAdd).toMutableList()
+        }
+
+        val currentIndex = player.currentMediaItemIndex
+        setQueueInternal(currentIndex)
+    }
+
+    fun removeSongs(songsToRemove: List<Song>) {
+        originalQueue.removeAll(songsToRemove)
+        currentQueue.removeAll(songsToRemove)
+
+        if (currentQueue.isEmpty()) {
+            player.stop()
+            player.clearMediaItems()
+            _queue.value = emptyList()
+            _currentSong.value = null
+            _currentIndex.value = 0
+            stopProgressUpdates()
+            return
+        }
+
+        val currentIndex = player.currentMediaItemIndex.coerceAtMost(currentQueue.lastIndex)
+        setQueueInternal(currentIndex)
+    }
+
+    fun reorderQueue(fromIndex: Int, toIndex: Int) {
+        if (isShuffleEnabled) return
+
+        val song = currentQueue.removeAt(fromIndex)
+        currentQueue.add(toIndex, song)
+
+        originalQueue = currentQueue.toMutableList()
+
+        val currentIndex = player.currentMediaItemIndex
+        setQueueInternal(currentIndex)
     }
 
     private fun startProgressUpdates() {
         progressJob?.cancel()
-        progressJob = CoroutineScope(Dispatchers.Main.immediate).launch {
+        progressJob = scope.launch {
             while (true) {
                 val dur = player.duration
                 val pos = player.currentPosition
                 _progress.value = if (dur > 0) pos.toFloat() / dur else 0f
                 delay(100L)
+            }
+        }
+    }
+
+    fun startPlaying(songsList: List<Song>) {
+        if (queue.value.isEmpty()) {
+            setQueue(songsList, startIndex = 0)
+            player.play()
+        } else {
+            if (player.isPlaying) {
+                player.pause()
+            } else {
+                player.play()
             }
         }
     }
