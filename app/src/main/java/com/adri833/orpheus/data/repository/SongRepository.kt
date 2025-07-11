@@ -38,7 +38,7 @@ class SongRepository @Inject constructor(
             projection,
             selection,
             selectionArgs,
-            "${MediaStore.Audio.Media.TITLE} ASC"
+            "${MediaStore.Audio.Media.TITLE} COLLATE NOCASE ASC"
         )
 
         cursor?.use {

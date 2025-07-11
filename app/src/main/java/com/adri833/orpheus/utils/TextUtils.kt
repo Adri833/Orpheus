@@ -16,10 +16,10 @@ fun safeText(text: String?): String =
     if (text.isNullOrBlank()) stringResource(R.string.unknown) else text
 
 @Composable
-fun NameText(name: String?, color: Color = Color.White, modifier: Modifier = Modifier) {
+fun NameText(name: String?, color: Color = Color.White, fontSize: Float = 17f, modifier: Modifier = Modifier) {
     Text(
         text = safeText(name),
-        fontSize = 17.sp,
+        fontSize = fontSize.sp,
         fontWeight = FontWeight.Bold,
         color = color,
         maxLines = 1,
@@ -29,10 +29,10 @@ fun NameText(name: String?, color: Color = Color.White, modifier: Modifier = Mod
 }
 
 @Composable
-fun ArtistText(artist: String?, color: Color = Color.Gray, modifier: Modifier = Modifier) {
+fun ArtistText(artist: String?, color: Color = Color.Gray, fontSize: Float = 15f, modifier: Modifier = Modifier) {
     Text(
         text = safeText(artist),
-        fontSize = 15.sp,
+        fontSize = fontSize.sp,
         style = MaterialTheme.typography.bodyMedium,
         color = color,
         maxLines = 1,
@@ -42,10 +42,10 @@ fun ArtistText(artist: String?, color: Color = Color.Gray, modifier: Modifier = 
 }
 
 @Composable
-fun AlbumText(album: String?, color: Color = Color.Gray, modifier: Modifier = Modifier) {
+fun AlbumText(album: String?, color: Color = Color.Gray, fontSize: Float = 13f, modifier: Modifier = Modifier) {
     Text(
         text = safeText(album),
-        fontSize = 13.sp,
+        fontSize = fontSize.sp,
         style = MaterialTheme.typography.bodySmall,
         color = color,
         maxLines = 1,

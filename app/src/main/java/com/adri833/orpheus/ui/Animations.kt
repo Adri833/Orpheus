@@ -10,6 +10,8 @@ import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -59,7 +61,10 @@ fun slidingOffset(
                 offsetX.snapTo(distance)
                 offsetX.animateTo(
                     targetValue = 0f,
-                    animationSpec = tween(durationMillis = durationIn, easing = LinearOutSlowInEasing)
+                    animationSpec = tween(
+                        durationMillis = durationIn,
+                        easing = LinearOutSlowInEasing
+                    )
                 )
             } else {
                 offsetX.animateTo(
@@ -69,7 +74,10 @@ fun slidingOffset(
                 offsetX.snapTo(-distance)
                 offsetX.animateTo(
                     targetValue = 0f,
-                    animationSpec = tween(durationMillis = durationIn, easing = LinearOutSlowInEasing)
+                    animationSpec = tween(
+                        durationMillis = durationIn,
+                        easing = LinearOutSlowInEasing
+                    )
                 )
             }
             oldKey = key
@@ -101,3 +109,35 @@ fun fadeShrinkOut(durationMillis: Int = 150): ExitTransition {
     return fadeOut(animationSpec = tween(durationMillis)) +
             shrinkHorizontally(animationSpec = tween(durationMillis))
 }
+
+@Composable
+fun slideInUpAnimation(
+    durationMillis: Int = 150
+): EnterTransition = slideInVertically(
+    initialOffsetY = { fullHeight -> fullHeight },
+    animationSpec = tween(durationMillis)
+)
+
+@Composable
+fun slideOutUpAnimation(
+    durationMillis: Int = 150
+): ExitTransition = slideOutVertically(
+    targetOffsetY = { fullHeight -> -fullHeight },
+    animationSpec = tween(durationMillis)
+)
+
+@Composable
+fun slideInDownAnimation(
+    durationMillis: Int = 150
+): EnterTransition = slideInVertically(
+    initialOffsetY = { fullHeight -> -fullHeight },
+    animationSpec = tween(durationMillis)
+)
+
+@Composable
+fun slideOutDownAnimation(
+    durationMillis: Int = 150
+): ExitTransition = slideOutVertically(
+    targetOffsetY = { fullHeight -> fullHeight },
+    animationSpec = tween(durationMillis)
+)

@@ -1,12 +1,8 @@
 package com.adri833.orpheus.navigation
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
@@ -23,7 +19,6 @@ import com.adri833.orpheus.screens.drive.DriveScreen
 import com.adri833.orpheus.screens.home.HomeScreen
 import com.adri833.orpheus.screens.library.LibraryScreen
 import com.adri833.orpheus.screens.login.LoginScreen
-import com.adri833.orpheus.screens.search.SearchScreen
 import com.adri833.orpheus.screens.splash.SplashScreen
 import com.adri833.orpheus.utils.adjustForMobile
 import androidx.navigation.compose.NavHost
@@ -34,6 +29,10 @@ import androidx.compose.runtime.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import com.adri833.orpheus.components.PlaybackQueueBottomSheet
+import com.adri833.orpheus.screens.song.SongScreen
+import com.adri833.orpheus.ui.slideInUpAnimation
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,10 +42,15 @@ fun NavigationHost(
     val navController = rememberNavController()
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
+    val showNowPlayingBar = currentRoute != Routes.Song.route
+    var showBars by remember { mutableStateOf(true) }
+
+    LaunchedEffect(currentRoute) {
+        showBars = currentRoute != Routes.Song.route
+    }
 
     val showBottomBar = currentRoute in listOf(
         Routes.Home.route,
-        Routes.Search.route,
         Routes.Playlist.route,
         Routes.Drive.route,
         Routes.Downloader.route,
@@ -54,30 +58,38 @@ fun NavigationHost(
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showQueue by remember { mutableStateOf(false) }
-
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         bottomBar = {
             Column(modifier = Modifier.adjustForMobile()) {
                 val currentSong by playerViewModel.currentSong.collectAsState()
 
-                AnimatedVisibility(visible = currentSong != null) {
+                AnimatedVisibility(
+                    visible = showBars && showNowPlayingBar && currentSong != null,
+                    enter = slideInUpAnimation(400),
+                ) {
                     NowPlayingBar(
                         viewModel = playerViewModel,
-                        onQueueClick = { showQueue = true }
+                        onQueueClick = { showQueue = true },
+                        navigationToSong = {
+                            coroutineScope.launch {
+                                showBars = false
+                                delay(250)
+                                navController.navigate(Routes.Song.route)
+                            }
+                        }
                     )
                 }
 
                 AnimatedVisibility(
-                    visible = showBottomBar,
-                    enter = fadeIn(tween(1000))
+                    visible = showBars && showBottomBar,
+                    enter = slideInUpAnimation(400),
                 ) {
                     BottomBar(navController)
                 }
 
-                if (!showBottomBar) {
-                    Box(modifier = Modifier.height(65.dp))
-                }
+
             }
         }
     ) { paddingValues ->
@@ -125,11 +137,6 @@ fun NavigationHost(
                 HomeScreen(playerViewModel)
             }
 
-            // Navegacion de la pantalla Search
-            composable(Routes.Search.route) {
-                SearchScreen()
-            }
-
             // Navegacion de la pantalla Library
             composable(Routes.Playlist.route) {
                 LibraryScreen()
@@ -143,6 +150,13 @@ fun NavigationHost(
             // Navegacion de la pantalla Downloader
             composable(Routes.Downloader.route) {
                 DownloaderScreen()
+            }
+
+            // Navegacion de la pantalla Song
+            composable(Routes.Song.route) {
+                SongScreen(
+                    viewModel = playerViewModel,
+                    onBack = { navController.popBackStack() })
             }
         }
     }
@@ -161,5 +175,4 @@ fun NavigationHost(
             )
         }
     }
-
 }

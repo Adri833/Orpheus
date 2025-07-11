@@ -25,12 +25,6 @@ object BottomNavItemsProvider {
                 route = Routes.Home.route
             ),
             BottomNavItem(
-                label = R.string.search,
-                filledIcon = painterResource(id = R.drawable.ic_search_fill),
-                outlinedIcon = painterResource(id = R.drawable.ic_search_outlined),
-                route = Routes.Search.route
-            ),
-            BottomNavItem(
                 label = R.string.playlist,
                 filledIcon = painterResource(id = R.drawable.ic_playlist_fill),
                 outlinedIcon = painterResource(id = R.drawable.ic_playlist_outlined),

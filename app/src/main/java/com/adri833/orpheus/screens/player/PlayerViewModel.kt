@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    private val playerManager: PlayerManager,
+    val playerManager: PlayerManager,
     songRepository: SongRepository
 ) : ViewModel() {
 

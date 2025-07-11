@@ -31,7 +31,8 @@ import com.adri833.orpheus.utils.noRippleClickable
 @Composable
 fun NowPlayingBar(
     viewModel: PlayerViewModel,
-    onQueueClick: () -> Unit
+    onQueueClick: () -> Unit,
+    navigationToSong: () -> Unit
 ) {
     val context = LocalContext.current
     val currentSong by viewModel.currentSong.collectAsState()
@@ -84,7 +85,7 @@ fun NowPlayingBar(
                     }
                 )
             }
-            .noRippleClickable { /* TODO: Navegar a pantalla de reproducción completa */ },
+            .noRippleClickable { navigationToSong() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         AlbumCover(song, 58)

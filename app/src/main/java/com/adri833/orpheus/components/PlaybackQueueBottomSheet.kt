@@ -49,7 +49,7 @@ fun PlaybackQueueBottomSheet(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(horizontal = 12.dp)
     ) {
         Text(
             text = stringResource(R.string.queue),
