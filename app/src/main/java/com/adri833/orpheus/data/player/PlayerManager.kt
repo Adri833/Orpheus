@@ -209,7 +209,12 @@ class PlayerManager @Inject constructor(
 
     fun startPlaying(songsList: List<Song>) {
         if (queue.value.isEmpty()) {
-            setQueue(songsList, startIndex = 0)
+            val startIndex = if (isShuffleEnabled && songsList.isNotEmpty()) {
+                (songsList.indices).random()
+            } else {
+                0
+            }
+            setQueue(songsList, startIndex = startIndex)
             player.play()
         } else {
             if (player.isPlaying) {
@@ -219,6 +224,7 @@ class PlayerManager @Inject constructor(
             }
         }
     }
+
 
     private fun stopProgressUpdates() {
         progressJob?.cancel()

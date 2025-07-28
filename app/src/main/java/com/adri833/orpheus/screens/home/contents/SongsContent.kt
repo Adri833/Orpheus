@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.Modifier
@@ -11,23 +12,29 @@ import com.adri833.orpheus.components.SongItem
 import com.adri833.orpheus.screens.home.HomeViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.adri833.orpheus.components.PlayButton
 import com.adri833.orpheus.components.ShuffleButton
 import com.adri833.orpheus.components.SongSearchBar
+import com.adri833.orpheus.domain.model.Song
 import com.adri833.orpheus.screens.player.PlayerViewModel
 
 @Composable
 fun SongsContent(
+    songs: List<Song>,
     homeViewModel: HomeViewModel,
-    playerViewModel: PlayerViewModel
+    playerViewModel: PlayerViewModel,
+    onBack: (() -> Unit)? = null
 ) {
-    val songs by homeViewModel.songs.collectAsState(initial = emptyList())
+    val searchQuery by homeViewModel.searchQuery.collectAsState()
     val currentSong by playerViewModel.currentSong.collectAsState()
     val isPlaying by playerViewModel.isPlaying.collectAsState()
-    var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(songs) {
         if (songs.isNotEmpty()) {
@@ -36,7 +43,25 @@ fun SongsContent(
     }
 
     val filteredSongs = songs.filter {
-        it.title.contains(searchQuery, ignoreCase = true) || it.artist.contains(searchQuery, ignoreCase = true) || it.album.contains(searchQuery, ignoreCase = true)
+        it.title.contains(searchQuery, ignoreCase = true) ||
+        it.artist.contains(searchQuery, ignoreCase = true) ||
+        it.album.contains(searchQuery, ignoreCase = true)
+    }
+
+    onBack?.let {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = it) {
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = "Favorite Icon",
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+        }
     }
 
     Row(
@@ -59,7 +84,7 @@ fun SongsContent(
 
         SongSearchBar(
             query = searchQuery,
-            onQueryChange = { searchQuery = it },
+            onQueryChange = { homeViewModel.updateSearchQuery(it) },
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
     }

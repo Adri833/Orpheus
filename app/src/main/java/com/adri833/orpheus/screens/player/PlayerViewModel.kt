@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,13 +30,20 @@ class PlayerViewModel @Inject constructor(
     val isShuffleEnabled: StateFlow<Boolean> = playerManager.isShuffleEnabledFlow
     val songs = songRepository.getSongs()
 
-    val isForward: StateFlow<Boolean> = currentIndex
-        .runningFold(Pair(-1, true)) { (lastIndex, _), newIndex ->
-            val forward = if (lastIndex == -1) true else newIndex > lastIndex
-            newIndex to forward
+    private val _isForward = MutableStateFlow(true)
+    val isForward: StateFlow<Boolean> = _isForward
+
+    private var lastIndex: Int? = null
+
+    init {
+        viewModelScope.launch {
+            currentIndex.collect { newIndex ->
+                val forward = lastIndex?.let { newIndex > it } ?: true
+                _isForward.value = forward
+                lastIndex = newIndex
+            }
         }
-        .map { it.second }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+    }
 
     fun loadSongs(songs: List<Song>) {
         _allSongs.value = songs

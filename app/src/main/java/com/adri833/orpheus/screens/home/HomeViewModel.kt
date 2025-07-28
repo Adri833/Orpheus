@@ -27,6 +27,13 @@ class HomeViewModel @Inject constructor(
     private val _songs = MutableStateFlow<List<Song>>(emptyList())
     val songs: StateFlow<List<Song>> = _songs
 
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery
+
+    init {
+        loadSongs()
+    }
+
     fun getProfilePicture(): Uri? {
         return authRepository.getProfilePictureUrl()
     }
@@ -56,5 +63,9 @@ class HomeViewModel @Inject constructor(
             val list = songRepository.getSongs()
             _songs.value = list
         }
+    }
+
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
     }
 }

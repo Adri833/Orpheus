@@ -1,23 +1,21 @@
 package com.adri833.orpheus.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.TextUnit
-import com.adri833.orpheus.ui.slidingOffset
-import kotlin.math.roundToInt
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SlidingText(
     text: String,
@@ -26,28 +24,36 @@ fun SlidingText(
     fontSize: TextUnit,
     forward: Boolean = true,
 ) {
-    var displayText by remember { mutableStateOf(text) }
-    var oldText by remember { mutableStateOf(text) }
-
-    val offsetX = slidingOffset(key = text, forward = forward)
-
-    LaunchedEffect(text) {
-        if (text != oldText) {
-            displayText = text
-            oldText = text
+    AnimatedContent(
+        targetState = text,
+        transitionSpec = {
+            val animDuration = 300
+            if (forward) {
+                (slideInHorizontally(
+                    animationSpec = tween(animDuration)
+                ) { width -> width } + fadeIn(animationSpec = tween(animDuration))).togetherWith(
+                    slideOutHorizontally(
+                        animationSpec = tween(animDuration)
+                    ) { width -> -width } + fadeOut(animationSpec = tween(animDuration))
+                )
+            } else {
+                (slideInHorizontally(
+                    animationSpec = tween(animDuration)
+                ) { width -> -width } + fadeIn(animationSpec = tween(animDuration))).togetherWith(
+                    slideOutHorizontally(
+                        animationSpec = tween(animDuration)
+                    ) { width -> width } + fadeOut(animationSpec = tween(animDuration))
+                )
+            }
         }
+    ) { targetText ->
+        Text(
+            text = targetText,
+            fontWeight = fontWeight,
+            color = color,
+            fontSize = fontSize,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
-
-    Text(
-        text = displayText,
-        fontWeight = fontWeight,
-        color = color,
-        fontSize = fontSize,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier
-            .offset { IntOffset(offsetX.roundToInt(), 0) }
-            .fillMaxWidth()
-    )
 }
-

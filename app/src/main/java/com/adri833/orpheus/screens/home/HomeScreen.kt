@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,8 +39,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.adri833.orpheus.R
 import com.adri833.orpheus.components.SelectableButton
 import com.adri833.orpheus.domain.handler.AudioPermissionHandler
-import com.adri833.orpheus.screens.home.contents.AlbumsContent
-import com.adri833.orpheus.screens.home.contents.ArtistsContent
+import com.adri833.orpheus.screens.home.contents.AlbumsHost
+import com.adri833.orpheus.screens.home.contents.ArtistsHost
 import com.adri833.orpheus.screens.home.contents.FoldersContent
 import com.adri833.orpheus.screens.home.contents.SongsContent
 import com.adri833.orpheus.screens.player.PlayerViewModel
@@ -59,13 +60,13 @@ fun HomeScreen(
     )
     var selected by remember { mutableStateOf(options[0]) }
     val alphaAnim = remember { Animatable(0f) }
+    val songs by homeViewModel.songs.collectAsState(emptyList())
 
     LaunchedEffect(Unit) {
         alphaAnim.animateTo(
             targetValue = ALPHA_VISIBLE,
             animationSpec = transitionFadeNormal
         )
-        homeViewModel.loadSongs()
     }
 
     Column(
@@ -124,9 +125,9 @@ fun HomeScreen(
         // Main content
         AudioPermissionHandler {
             when (selected) {
-                stringResource(R.string.canciones) -> SongsContent(homeViewModel, playerViewModel)
-                stringResource(R.string.albumes) -> AlbumsContent(homeViewModel)
-                stringResource(R.string.artistas) -> ArtistsContent(homeViewModel)
+                stringResource(R.string.canciones) -> SongsContent(songs, homeViewModel, playerViewModel)
+                stringResource(R.string.albumes) -> AlbumsHost(songs, homeViewModel, playerViewModel)
+                stringResource(R.string.artistas) -> ArtistsHost(songs, homeViewModel, playerViewModel)
                 stringResource(R.string.carpetas) -> FoldersContent(homeViewModel)
             }
         }
