@@ -9,4 +9,5 @@ data class Song(
     val artist: String,
     val albumArt: Uri?,
     val contentUri: Uri,
+    val filePath: String
 )

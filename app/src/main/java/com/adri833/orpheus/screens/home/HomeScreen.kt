@@ -112,6 +112,7 @@ fun HomeScreen(
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(bottom = 14.dp),
         ) {
             items(options.size) { name ->
                 SelectableButton(
@@ -128,7 +129,7 @@ fun HomeScreen(
                 stringResource(R.string.canciones) -> SongsContent(songs, homeViewModel, playerViewModel)
                 stringResource(R.string.albumes) -> AlbumsHost(songs, homeViewModel, playerViewModel)
                 stringResource(R.string.artistas) -> ArtistsHost(songs, homeViewModel, playerViewModel)
-                stringResource(R.string.carpetas) -> FoldersContent(homeViewModel)
+                stringResource(R.string.carpetas) -> FoldersContent(homeViewModel, playerViewModel)
             }
         }
     }

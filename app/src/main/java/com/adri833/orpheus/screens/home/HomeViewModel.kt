@@ -65,6 +65,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun getFolders(): List<String> {
+        return songRepository.getFolders()
+    }
+
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
     }

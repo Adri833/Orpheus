@@ -54,6 +54,6 @@ fun AlbumCoverWithVinyl(song: Song) {
             )
         }
 
-        AlbumCover(song, size = 75)
+        AlbumCover(song, size = 76)
     }
 }

@@ -13,11 +13,12 @@ import com.adri833.orpheus.screens.home.HomeViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.adri833.orpheus.components.PlayButton
 import com.adri833.orpheus.components.ShuffleButton
@@ -48,28 +49,23 @@ fun SongsContent(
         it.album.contains(searchQuery, ignoreCase = true)
     }
 
-    onBack?.let {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = it) {
-                Icon(
-                    imageVector = Icons.Filled.Favorite,
-                    contentDescription = "Favorite Icon",
-                    modifier = Modifier.size(48.dp)
-                )
-            }
-        }
-    }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .padding(bottom = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        onBack?.let {
+            IconButton(onClick = it) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Favorite Icon",
+                    modifier = Modifier.size(48.dp),
+                    tint = Color.White
+                )
+            }
+        }
+
         ShuffleButton(playerViewModel)
 
         Spacer(modifier = Modifier.width(12.dp))
