@@ -107,7 +107,7 @@ fun PlaybackQueueBottomSheet(
 
                             PlayButton(
                                 isPlaying = playerViewModel.isPlaying,
-                                onPlayClick = { playerViewModel.playOrResume() },
+                                onPlayClick = { playerViewModel.togglePlayback() },
                                 onPauseClick = { playerViewModel.pause() },
                                 modifier = Modifier.size(40.dp)
                             )

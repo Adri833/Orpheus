@@ -1,10 +1,15 @@
 package com.adri833.orpheus.data.player
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.adri833.orpheus.domain.model.Song
+import com.adri833.orpheus.services.MusicService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,14 +22,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@UnstableApi
 class PlayerManager @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    val player: ExoPlayer
 ) {
-    val player: ExoPlayer by lazy {
-        ExoPlayer.Builder(context).build().apply {
-            addListener(playerListener)
-        }
-    }
+    private var musicService: MusicService? = null
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val _currentSong = MutableStateFlow<Song?>(null)
@@ -58,9 +61,33 @@ class PlayerManager @Inject constructor(
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             val index = player.currentMediaItemIndex
             _currentIndex.value = index
-            _currentSong.value = currentQueue.getOrNull(index)
+            val song = currentQueue.getOrNull(index)
+            _currentSong.value = song
             _queue.value = currentQueue.toList()
+
+            song?.let {
+                val bitmap = it.albumArt?.let { uri -> getBitmapFromUri(uri) }
+                musicService?.updateMetadata(it.title, it.artist, bitmap)
+            }
         }
+    }
+
+    fun attachMusicService(service: MusicService) {
+        musicService = service
+    }
+
+    private fun getBitmapFromUri(uri: Uri): Bitmap? {
+        return try {
+            context.contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it)
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    init {
+        player.addListener(playerListener)
     }
 
     fun pause() = player.pause()
@@ -79,7 +106,6 @@ class PlayerManager @Inject constructor(
             player.play()
         }
     }
-
 
     fun skipToPrevious() {
         val index = player.currentMediaItemIndex

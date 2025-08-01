@@ -20,12 +20,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.util.UnstableApi
 import com.adri833.orpheus.components.PlayButton
 import com.adri833.orpheus.components.ShuffleButton
 import com.adri833.orpheus.components.SongSearchBar
 import com.adri833.orpheus.domain.model.Song
 import com.adri833.orpheus.screens.player.PlayerViewModel
 
+@UnstableApi
 @Composable
 fun SongsContent(
     songs: List<Song>,
@@ -72,7 +74,7 @@ fun SongsContent(
 
         PlayButton(
             isPlaying = playerViewModel.isPlaying,
-            onPlayClick = { playerViewModel.playOrResume() },
+            onPlayClick = { playerViewModel.playOrResume(filteredSongs) },
             onPauseClick = { playerViewModel.pause() }
         )
 

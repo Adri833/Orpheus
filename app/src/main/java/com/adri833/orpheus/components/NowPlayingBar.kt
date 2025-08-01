@@ -122,7 +122,7 @@ fun NowPlayingBar(
             backgroundColor = dominantColor,
             contentColor = contentColor,
             onClick = {
-                if (isPlaying) viewModel.pause() else viewModel.playOrResume()
+                if (isPlaying) viewModel.pause() else viewModel.togglePlayback()
             }
         )
 

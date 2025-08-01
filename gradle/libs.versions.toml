@@ -1,30 +1,30 @@
 [versions]
-accompanistNavigationAnimation = "0.34.0"
+accompanistNavigationAnimation = "0.36.0"
 agp = "8.10.1"
-coilCompose = "2.4.0"
-firebaseAuth = "23.2.1"
-firebaseBom = "33.16.0"
+coilCompose = "2.7.0"
+firebaseAuth = "24.0.0"
+firebaseBom = "34.0.0"
 credentials = "1.5.0"
 credentialsPlayServicesAuth = "1.5.0"
 googleid = "1.1.1"
-hiltAndroid = "2.49"
-hiltCompiler = "2.48"
+hiltAndroid = "2.57"
+hiltCompiler = "2.57"
 hiltNavigationCompose = "1.2.0"
-kotlin = "2.0.21"
+kotlin = "2.2.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.9.1"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+lifecycleRuntimeKtx = "2.9.2"
 activityCompose = "1.10.1"
-composeBom = "2025.06.01"
-lottieCompose = "6.3.0"
+composeBom = "2025.07.00"
+lottieCompose = "6.6.7"
 media = "1.7.0"
-media3Session = "1.7.1"
-navigationCompose = "2.9.1"
-media3Exoplayer = "1.7.1"
+media3Session = "1.8.0"
+navigationCompose = "2.9.3"
+media3Exoplayer = "1.8.0"
 paletteKtx = "1.0.0"
-media3Ui = "1.7.1"
+media3Ui = "1.8.0"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistNavigationAnimation" }
@@ -66,5 +66,5 @@ androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.re
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-hilt = { id = "com.google.dagger.hilt.android", version = "2.48" }
+hilt = { id = "com.google.dagger.hilt.android", version = "2.57" }
 

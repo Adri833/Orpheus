@@ -1,22 +1,22 @@
 package com.adri833.orpheus.screens.player
 
+import androidx.annotation.OptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.util.UnstableApi
 import com.adri833.orpheus.data.player.PlayerManager
 import com.adri833.orpheus.data.repository.SongRepository
 import com.adri833.orpheus.domain.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.runningFold
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PlayerViewModel @Inject constructor(
+@UnstableApi
+class PlayerViewModel @OptIn(UnstableApi::class)
+@Inject constructor(
     val playerManager: PlayerManager,
     songRepository: SongRepository
 ) : ViewModel() {
@@ -73,10 +73,10 @@ class PlayerViewModel @Inject constructor(
         playerManager.toggleShuffle()
     }
 
-    fun playOrResume() {
+    fun playOrResume(filteredSongs: List<Song>) {
         val currentQueue = playerManager.queue.value
         if (currentQueue.isEmpty()) {
-            playerManager.startPlaying(songs)
+            playerManager.startPlaying(filteredSongs)
         } else {
             if (playerManager.isPlaying.value) {
                 playerManager.pause()
@@ -85,6 +85,17 @@ class PlayerViewModel @Inject constructor(
             }
         }
     }
+
+    fun togglePlayback() {
+        if (playerManager.queue.value.isNotEmpty()) {
+            if (playerManager.isPlaying.value) {
+                playerManager.pause()
+            } else {
+                playerManager.resume()
+            }
+        }
+    }
+
 
     fun pause() = playerManager.pause()
 

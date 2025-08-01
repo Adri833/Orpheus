@@ -180,7 +180,7 @@ fun SongScreen(
                         )
                     }
 
-                    IconButton(onClick = { viewModel.playOrResume() }) {
+                    IconButton(onClick = { viewModel.togglePlayback() }) {
                         Icon(
                             painter = if (isPlaying)
                                 painterResource(id = R.drawable.ic_pause) else
