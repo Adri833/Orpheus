@@ -1,6 +1,7 @@
 package com.adri833.orpheus.data.player
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -64,26 +65,11 @@ class PlayerManager @Inject constructor(
             val song = currentQueue.getOrNull(index)
             _currentSong.value = song
             _queue.value = currentQueue.toList()
-
-            song?.let {
-                val bitmap = it.albumArt?.let { uri -> getBitmapFromUri(uri) }
-                musicService?.updateMetadata(it.title, it.artist, bitmap)
-            }
         }
     }
 
     fun attachMusicService(service: MusicService) {
         musicService = service
-    }
-
-    private fun getBitmapFromUri(uri: Uri): Bitmap? {
-        return try {
-            context.contentResolver.openInputStream(uri)?.use {
-                BitmapFactory.decodeStream(it)
-            }
-        } catch (e: Exception) {
-            null
-        }
     }
 
     init {

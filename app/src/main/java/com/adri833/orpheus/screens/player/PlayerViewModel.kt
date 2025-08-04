@@ -1,6 +1,5 @@
 package com.adri833.orpheus.screens.player
 
-import androidx.annotation.OptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
@@ -15,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 @UnstableApi
-class PlayerViewModel @OptIn(UnstableApi::class)
+class PlayerViewModel
 @Inject constructor(
     val playerManager: PlayerManager,
     songRepository: SongRepository

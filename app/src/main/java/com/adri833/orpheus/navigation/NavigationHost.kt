@@ -1,5 +1,7 @@
 package com.adri833.orpheus.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,12 +30,15 @@ import com.adri833.orpheus.screens.player.PlayerViewModel
 import androidx.compose.runtime.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.media3.common.util.UnstableApi
 import com.adri833.orpheus.components.PlaybackQueueBottomSheet
 import com.adri833.orpheus.screens.song.SongScreen
 import com.adri833.orpheus.ui.slideInUpAnimation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationHost(
@@ -95,7 +100,7 @@ fun NavigationHost(
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Routes.Home.route,
+            startDestination = Routes.Splash.route,
             modifier = Modifier.padding(paddingValues)
         ) {
 

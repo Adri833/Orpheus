@@ -1,5 +1,8 @@
 package com.adri833.orpheus.screens.home
 
+import android.os.Build
+import androidx.annotation.OptIn
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,10 +38,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.common.util.UnstableApi
 import coil.compose.rememberAsyncImagePainter
 import com.adri833.orpheus.R
 import com.adri833.orpheus.components.SelectableButton
-import com.adri833.orpheus.domain.handler.AudioPermissionHandler
+import com.adri833.orpheus.domain.handler.PermissionHandler
 import com.adri833.orpheus.screens.home.contents.AlbumsHost
 import com.adri833.orpheus.screens.home.contents.ArtistsHost
 import com.adri833.orpheus.screens.home.contents.FoldersContent
@@ -47,6 +51,8 @@ import com.adri833.orpheus.screens.player.PlayerViewModel
 import com.adri833.orpheus.ui.ALPHA_VISIBLE
 import com.adri833.orpheus.ui.transitionFadeNormal
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(UnstableApi::class)
 @Composable
 fun HomeScreen(
     playerViewModel: PlayerViewModel,
@@ -124,7 +130,7 @@ fun HomeScreen(
         }
 
         // Main content
-        AudioPermissionHandler {
+        PermissionHandler {
             when (selected) {
                 stringResource(R.string.canciones) -> SongsContent(songs, homeViewModel, playerViewModel)
                 stringResource(R.string.albumes) -> AlbumsHost(songs, homeViewModel, playerViewModel)

@@ -1,5 +1,7 @@
 package com.adri833.orpheus
 
+import android.content.ComponentName
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,19 +12,22 @@ import com.adri833.orpheus.navigation.NavigationHost
 import com.adri833.orpheus.ui.theme.OrpheusTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import android.content.ComponentName
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaControllerCompat
 import androidx.annotation.OptIn
+import androidx.annotation.RequiresApi
 import androidx.media3.common.util.UnstableApi
+import com.adri833.orpheus.services.MusicService
 
 
 @Suppress("DEPRECATION")
 @OptIn(UnstableApi::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     private lateinit var mediaBrowser: MediaBrowserCompat
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -52,7 +57,7 @@ class MainActivity : ComponentActivity() {
     private fun connectToMediaSession() {
         val mediaBrowser = MediaBrowserCompat(
             this,
-            ComponentName(this, com.adri833.orpheus.services.MusicService::class.java),
+            ComponentName(this, MusicService::class.java),
             object : MediaBrowserCompat.ConnectionCallback() {
                 override fun onConnected() {
                     try {
@@ -67,5 +72,4 @@ class MainActivity : ComponentActivity() {
         )
         mediaBrowser.connect()
     }
-
 }
