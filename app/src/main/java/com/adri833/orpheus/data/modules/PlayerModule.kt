@@ -26,9 +26,8 @@ object PlayerModule {
     @Provides
     @Singleton
     fun providePlayerManager(
-        @ApplicationContext context: Context,
         player: ExoPlayer
     ): PlayerManager {
-        return PlayerManager(context, player)
+        return PlayerManager(player)
     }
 }

@@ -42,4 +42,16 @@
     <string name="permission_audio_description">Se necesita permiso para acceder al audio local\n\nActívalo manualmente desde\n</string>
     <string name="permission_audio_path">Ajustes &gt; Aplicaciones &gt; Permisos</string>
     <string name="open_settings">Abrir ajustes</string>
+
+    // Opciones de cancion
+    <string name="add_to_queue">Añadir a la cola</string>
+    <string name="go_to_album">Ir al álbum</string>
+    <string name="go_to_artist">Ir al artista</string>
+    <string name="edit_info">Cambiar información</string>
+    <string name="share">Compartir</string>
+    <string name="delete">Eliminar</string>
+    <string name="song_deleted_success">Canción eliminada correctamente</string>
+    <string name="song_deleted_failure">No se pudo eliminar la canción</string>
+    <string name="song_deleted_cancelled">Eliminación cancelada</string>
+
 </resources>

@@ -1,17 +1,11 @@
 package com.adri833.orpheus.data.player
 
-import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.adri833.orpheus.domain.model.Song
 import com.adri833.orpheus.services.MusicService
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -25,7 +19,6 @@ import javax.inject.Inject
 
 @UnstableApi
 class PlayerManager @Inject constructor(
-    @ApplicationContext private val context: Context,
     val player: ExoPlayer
 ) {
     private var musicService: MusicService? = null

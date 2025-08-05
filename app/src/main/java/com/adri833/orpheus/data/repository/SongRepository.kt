@@ -13,7 +13,7 @@ import java.io.File
 class SongRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-     fun getSongs(): List<Song> {
+    fun getSongs(): List<Song> {
         val songs = mutableListOf<Song>()
         val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
@@ -21,11 +21,12 @@ class SongRepository @Inject constructor(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         }
 
-         val selection = "${MediaStore.Audio.Media.DATA} LIKE ? OR ${MediaStore.Audio.Media.DATA} LIKE ?"
-         val selectionArgs = arrayOf("%/Music/%", "%/Download/%")
+        val selection =
+            "${MediaStore.Audio.Media.DATA} LIKE ? OR ${MediaStore.Audio.Media.DATA} LIKE ?"
+        val selectionArgs = arrayOf("%/Music/%", "%/Download/%")
 
 
-         val projection = arrayOf(
+        val projection = arrayOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ALBUM,
@@ -79,7 +80,8 @@ class SongRepository @Inject constructor(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         }
 
-        val selection = "${MediaStore.Audio.Media.DATA} LIKE ? OR ${MediaStore.Audio.Media.DATA} LIKE ?"
+        val selection =
+            "${MediaStore.Audio.Media.DATA} LIKE ? OR ${MediaStore.Audio.Media.DATA} LIKE ?"
         val selectionArgs = arrayOf("%/Music/%", "%/Download/%")
 
         val projection = arrayOf(MediaStore.Audio.Media.DATA)
@@ -105,5 +107,4 @@ class SongRepository @Inject constructor(
 
         return folders.toList().sorted()
     }
-
 }

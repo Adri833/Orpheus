@@ -100,7 +100,7 @@ fun NavigationHost(
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Routes.Splash.route,
+            startDestination = Routes.Home.route,
             modifier = Modifier.padding(paddingValues)
         ) {
 

@@ -42,4 +42,16 @@
     <string name="permission_audio_description">Permission is needed to access local audio\n\nEnable it manually from\n</string>
     <string name="permission_audio_path">Settings &gt; Apps &gt; Permissions</string>
     <string name="open_settings">Open settings</string>
+
+    // Song options
+    <string name="add_to_queue">Add to queue</string>
+    <string name="go_to_album">Go to album</string>
+    <string name="go_to_artist">Go to artist</string>
+    <string name="edit_info">Edit info</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
+    <string name="song_deleted_success">Song deleted successfully</string>
+    <string name="song_deleted_failure">Failed to delete the song</string>
+    <string name="song_deleted_cancelled">Deletion cancelled</string>
+
 </resources>

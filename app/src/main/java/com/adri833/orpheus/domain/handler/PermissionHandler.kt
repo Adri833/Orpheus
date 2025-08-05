@@ -22,7 +22,7 @@ fun PermissionHandler(
     val context = LocalContext.current
 
     // 0 = iniciar, 1 = pedir notif, 2 = pedir audio, 3 = permisos concedidos, 4 = denegado
-    var step by remember { mutableStateOf(0) }
+    var step by remember { mutableIntStateOf(0) }
     var notifGranted by remember { mutableStateOf(false) }
     var audioGranted by remember { mutableStateOf(false) }
 

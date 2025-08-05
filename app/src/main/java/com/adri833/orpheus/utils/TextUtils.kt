@@ -9,6 +9,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import com.adri833.orpheus.R
 
 @Composable
@@ -48,6 +50,25 @@ fun AlbumText(album: String?, color: Color = Color.Gray, fontSize: Float = 13f, 
         fontSize = fontSize.sp,
         style = MaterialTheme.typography.bodySmall,
         color = color,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun OptionText(
+    text: String,
+    color: Color = Color.White,
+    fontSize: Float = 17f,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        color = color,
+        fontSize = fontSize.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = FontFamily(Font(R.font.merriweather_bold, FontWeight.Bold)),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         modifier = modifier

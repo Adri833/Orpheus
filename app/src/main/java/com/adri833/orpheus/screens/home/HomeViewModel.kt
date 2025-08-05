@@ -1,7 +1,13 @@
 package com.adri833.orpheus.screens.home
 
+import android.app.Activity
+import android.app.RecoverableSecurityException
 import android.content.Context
+import android.content.IntentSender
 import android.net.Uri
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adri833.orpheus.R
@@ -72,4 +78,33 @@ class HomeViewModel @Inject constructor(
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
     }
+
+    fun deleteSong(
+        song: Song,
+        onRecoverableSecurityException: (IntentSender) -> Unit,
+        onPendingDelete: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val uri = song.contentUri
+            try {
+                val deleted = context.contentResolver.delete(uri, null, null) > 0
+
+                if (deleted) {
+                    Toast.makeText(context, context.getString(R.string.song_deleted_success), Toast.LENGTH_SHORT).show()
+                    loadSongs()
+                } else {
+                    Toast.makeText(context, context.getString(R.string.song_deleted_failure), Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: SecurityException) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && e is RecoverableSecurityException) {
+                    onPendingDelete?.invoke()
+                    val intentSender = e.userAction.actionIntent.intentSender
+                    onRecoverableSecurityException(intentSender)
+                } else {
+                    Toast.makeText(context, context.getString(R.string.song_deleted_failure), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
 }

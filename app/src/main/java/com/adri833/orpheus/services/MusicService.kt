@@ -65,7 +65,7 @@ class MusicService : Service() {
                 }
 
                 override fun createCurrentContentIntent(player: Player): PendingIntent? {
-                    return null // Puedes configurar el intent a tu UI principal si quieres
+                    return null
                 }
 
                 override fun getCurrentContentText(player: Player): CharSequence? {
