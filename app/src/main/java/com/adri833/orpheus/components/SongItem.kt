@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +50,7 @@ fun SongItem(
         Spacer(modifier = Modifier.width(12.dp))
 
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f).padding(end = 10.dp)
         ) {
             NameText(
                 name = song.title,
@@ -70,7 +69,7 @@ fun SongItem(
             NowPlayingEqualizer(
                 isPlaying = shouldAnimate,
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(26.dp)
             )
         }
 
@@ -78,9 +77,13 @@ fun SongItem(
         Box(
             modifier = Modifier.wrapContentSize(Alignment.TopEnd)
         ) {
-            IconButton(onClick = { onOptionsClick(song) }) {
-                Icon(Icons.Default.MoreVert, contentDescription = "Opciones")
-            }
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "Opciones",
+                modifier = Modifier
+                    .size(30.dp)
+                    .noRippleClickable { onOptionsClick(song) }
+            )
         }
     }
 }

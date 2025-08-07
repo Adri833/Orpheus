@@ -22,7 +22,6 @@ fun ArtistsContent(
         items(artists) { (artistName, artistSongs) ->
             ArtistItem(
                 artistName = artistName,
-                song = artistSongs.first(),
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { onArtistSelected(artistName, artistSongs) }
             )

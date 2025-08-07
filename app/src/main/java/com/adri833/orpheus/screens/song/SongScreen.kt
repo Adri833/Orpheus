@@ -1,6 +1,7 @@
 package com.adri833.orpheus.screens.song
 
 import androidx.activity.compose.BackHandler
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.media3.common.util.UnstableApi
 import com.adri833.orpheus.R
 import com.adri833.orpheus.components.AlbumCover
 import com.adri833.orpheus.components.ShuffleButton
@@ -42,6 +44,7 @@ import com.adri833.orpheus.utils.NameText
 import kotlinx.coroutines.delay
 
 
+@OptIn(UnstableApi::class)
 @Composable
 fun SongScreen(
     viewModel: PlayerViewModel,
@@ -193,7 +196,7 @@ fun SongScreen(
 
                     IconButton(onClick = { viewModel.skipToNext() }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_next), // drawable pendiente
+                            painter = painterResource(id = R.drawable.ic_next),
                             contentDescription = "Siguiente",
                             tint = Color.White,
                             modifier = Modifier.size(56.dp)

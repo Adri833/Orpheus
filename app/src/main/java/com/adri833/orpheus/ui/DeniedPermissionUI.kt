@@ -43,7 +43,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.adri833.orpheus.ui.theme.DarkGray
+import com.adri833.orpheus.ui.theme.Gray
 import com.adri833.orpheus.ui.theme.Gold
 import com.adri833.orpheus.ui.theme.LightGray
 import com.adri833.orpheus.utils.adjustForMobile
@@ -131,7 +131,7 @@ fun DeniedPermissionUI(
                 text = stringResource(R.string.open_settings),
                 fontSize = 16.sp,
                 fontFamily = FontFamily(Font(R.font.merriweather_regular)),
-                color = DarkGray,
+                color = Gray,
                 fontWeight = FontWeight.SemiBold
             )
         }

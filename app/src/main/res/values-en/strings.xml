@@ -53,5 +53,6 @@
     <string name="song_deleted_success">Song deleted successfully</string>
     <string name="song_deleted_failure">Failed to delete the song</string>
     <string name="song_deleted_cancelled">Deletion cancelled</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

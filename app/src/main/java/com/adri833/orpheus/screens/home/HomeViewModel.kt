@@ -1,13 +1,11 @@
 package com.adri833.orpheus.screens.home
 
-import android.app.Activity
 import android.app.RecoverableSecurityException
 import android.content.Context
 import android.content.IntentSender
 import android.net.Uri
 import android.os.Build
 import android.widget.Toast
-import androidx.activity.result.IntentSenderRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adri833.orpheus.R
@@ -27,7 +25,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val songRepository: SongRepository,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _songs = MutableStateFlow<List<Song>>(emptyList())

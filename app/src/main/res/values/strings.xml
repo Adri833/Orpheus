@@ -53,5 +53,6 @@
     <string name="song_deleted_success">Canción eliminada correctamente</string>
     <string name="song_deleted_failure">No se pudo eliminar la canción</string>
     <string name="song_deleted_cancelled">Eliminación cancelada</string>
+    <string name="cancel">Cancelar</string>
 
 </resources>

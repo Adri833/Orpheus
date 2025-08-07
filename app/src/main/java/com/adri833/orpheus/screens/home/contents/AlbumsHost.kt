@@ -9,7 +9,10 @@ import com.adri833.orpheus.domain.model.Song
 import com.adri833.orpheus.screens.home.HomeViewModel
 import com.adri833.orpheus.screens.player.PlayerViewModel
 import androidx.activity.compose.BackHandler
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
 
+@OptIn(UnstableApi::class)
 @Composable
 fun AlbumsHost(
     allSongs: List<Song>,

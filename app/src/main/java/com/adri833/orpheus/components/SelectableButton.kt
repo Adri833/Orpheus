@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adri833.orpheus.R
 import com.adri833.orpheus.ui.pulseScale
-import com.adri833.orpheus.ui.theme.DarkGray
+import com.adri833.orpheus.ui.theme.Gray
 import com.adri833.orpheus.ui.theme.Gold
 
 @Composable
@@ -35,7 +35,7 @@ fun SelectableButton(
     }
 
     Surface(
-        color = if (isSelected) Gold else DarkGray,
+        color = if (isSelected) Gold else Gray,
         shape = RoundedCornerShape(50),
         modifier = Modifier
             .graphicsLayer {
