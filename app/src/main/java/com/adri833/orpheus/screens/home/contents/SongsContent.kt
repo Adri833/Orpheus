@@ -121,7 +121,7 @@ fun SongsContent(
     }
 
     LazyColumn {
-        items(songs) { song ->
+        items(filteredSongs) { song ->
             SongItem(
                 song = song,
                 currentSong = currentSong,

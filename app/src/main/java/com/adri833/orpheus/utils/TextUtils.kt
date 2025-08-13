@@ -31,10 +31,11 @@ fun NameText(name: String?, color: Color = Color.White, fontSize: Float = 17f, m
 }
 
 @Composable
-fun ArtistText(artist: String?, color: Color = Color.Gray, fontSize: Float = 15f, modifier: Modifier = Modifier) {
+fun ArtistText(artist: String?, color: Color = Color.Gray, fontSize: Float = 15f, modifier: Modifier = Modifier, fontWeight: FontWeight? = null) {
     Text(
         text = safeText(artist),
         fontSize = fontSize.sp,
+        fontWeight = fontWeight,
         style = MaterialTheme.typography.bodyMedium,
         color = color,
         maxLines = 1,

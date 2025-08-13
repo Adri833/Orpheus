@@ -42,7 +42,7 @@ import androidx.media3.common.util.UnstableApi
 import coil.compose.rememberAsyncImagePainter
 import com.adri833.orpheus.R
 import com.adri833.orpheus.components.SelectableButton
-import com.adri833.orpheus.domain.handler.PermissionHandler
+import com.adri833.orpheus.domain.handler.AudioPermissionHandler
 import com.adri833.orpheus.screens.home.contents.AlbumsHost
 import com.adri833.orpheus.screens.home.contents.ArtistsHost
 import com.adri833.orpheus.screens.home.contents.FoldersContent
@@ -130,7 +130,7 @@ fun HomeScreen(
         }
 
         // Main content
-        PermissionHandler {
+        AudioPermissionHandler {
             when (selected) {
                 stringResource(R.string.canciones) -> SongsContent(songs, homeViewModel, playerViewModel)
                 stringResource(R.string.albumes) -> AlbumsHost(songs, homeViewModel, playerViewModel)

@@ -15,7 +15,9 @@ fun ArtistsContent(
     onArtistSelected: (artistName: String, artistSongs: List<Song>) -> Unit
 ) {
     val artists = remember(songs) {
-        songs.groupBy { it.artist }.map { it.key to it.value }
+        songs.groupBy { normalizeArtistName(it.artist) }
+            .map { it.key to it.value }
+            .sortedBy { it.first }
     }
 
     LazyColumn {
@@ -27,4 +29,17 @@ fun ArtistsContent(
             )
         }
     }
+}
+
+fun normalizeArtistName(artist: String): String {
+    // Quita lo que esté entre paréntesis y espacios extra
+    return artist
+        .substringBefore("(")
+        .substringBefore("&")
+        .substringBefore("/")
+        .substringBefore(",")
+        .substringBefore(";")
+        .substringBefore("-")
+        .replace(Regex("\\s+"), " ")
+        .trim()
 }
