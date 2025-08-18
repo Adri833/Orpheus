@@ -1,7 +1,6 @@
 package com.adri833.orpheus.components
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
+import androidx.annotation.OptIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
@@ -15,19 +14,19 @@ import com.adri833.orpheus.R
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.util.UnstableApi
 import com.adri833.orpheus.screens.player.PlayerViewModel
-import com.adri833.orpheus.utils.getDominantColor
-import com.adri833.orpheus.utils.isColorDark
+import com.adri833.orpheus.ui.theme.rememberSongColors
 import com.adri833.orpheus.utils.lighten
 import com.adri833.orpheus.utils.mixWithWhite
 import com.adri833.orpheus.utils.noRippleClickable
 
+@OptIn(UnstableApi::class)
 @Composable
 fun NowPlayingBar(
     viewModel: PlayerViewModel,
@@ -39,20 +38,11 @@ fun NowPlayingBar(
     val isPlaying by viewModel.isPlaying.collectAsState()
     val progress by viewModel.playbackProgress.collectAsState()
     val song = currentSong ?: return
+    val songColors = rememberSongColors(context, song.albumArt ?: song.contentUri)
+    val contentColor = songColors.contentColor
 
-    var targetColor by remember { mutableStateOf(Color.LightGray) }
-    val dominantColor by animateColorAsState(
-        targetValue = targetColor,
-        animationSpec = tween(durationMillis = 200)
-    )
-
-    val contentColor = if (isColorDark(dominantColor)) Color.White else Color.Black
     var totalDragX by remember { mutableFloatStateOf(0f) }
     val forward by viewModel.isForward.collectAsState()
-
-    LaunchedEffect(song.contentUri) {
-        targetColor = getDominantColor(context, song.albumArt ?: song.contentUri)
-    }
 
     Row(
         modifier = Modifier
@@ -62,8 +52,8 @@ fun NowPlayingBar(
             .background(
                 brush = Brush.horizontalGradient(
                     colors = listOf(
-                        dominantColor.mixWithWhite(0.6f),
-                        dominantColor.lighten(0.6f),
+                        songColors.backgroundColor.mixWithWhite(0.6f),
+                        songColors.backgroundColor.lighten(0.6f),
                     )
                 )
             )
@@ -71,11 +61,8 @@ fun NowPlayingBar(
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDragEnd = {
-                        if (totalDragX < -100f) {
-                            viewModel.skipToNext()
-                        } else if (totalDragX > 100f) {
-                            viewModel.skipToPrevious()
-                        }
+                        if (totalDragX < -100f) viewModel.skipToNext()
+                        else if (totalDragX > 100f) viewModel.skipToPrevious()
                         totalDragX = 0f
                     },
                     onDragCancel = { totalDragX = 0f },
@@ -93,9 +80,7 @@ fun NowPlayingBar(
         Spacer(modifier = Modifier.width(16.dp))
 
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .clipToBounds()
+            modifier = Modifier.weight(1f).clipToBounds()
         ) {
             SlidingText(
                 text = song.title,
@@ -119,7 +104,7 @@ fun NowPlayingBar(
         ProgressIconButton(
             isPlaying = isPlaying,
             progress = progress,
-            backgroundColor = dominantColor,
+            backgroundColor = songColors.backgroundColor,
             contentColor = contentColor,
             onClick = {
                 if (isPlaying) viewModel.pause() else viewModel.togglePlayback()
@@ -132,9 +117,7 @@ fun NowPlayingBar(
             painter = painterResource(R.drawable.ic_queue),
             contentDescription = "Queue",
             tint = contentColor,
-            modifier = Modifier
-                .size(30.dp)
-                .noRippleClickable { onQueueClick() }
+            modifier = Modifier.size(30.dp).noRippleClickable { onQueueClick() }
         )
     }
 }

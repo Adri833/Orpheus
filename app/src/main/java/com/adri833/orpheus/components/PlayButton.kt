@@ -23,14 +23,16 @@ fun PlayButton(
     isPlaying: StateFlow<Boolean>,
     onPlayClick: () -> Unit,
     onPauseClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Gold,
+    iconColor: Color = Color.Black
 ) {
     val playing by isPlaying.collectAsState()
 
     Box(
         modifier = modifier
             .size(56.dp)
-            .background(color = Gold, shape = CircleShape)
+            .background(color = backgroundColor, shape = CircleShape)
             .clip(CircleShape)
             .noRippleClickable {
                 if (playing) onPauseClick() else onPlayClick()
@@ -42,7 +44,7 @@ fun PlayButton(
                 id = if (playing) R.drawable.ic_pause else R.drawable.ic_play
             ),
             contentDescription = if (playing) "Pause" else "Play",
-            tint = Color.Black,
+            tint = iconColor,
             modifier = Modifier.size(32.dp)
         )
     }

@@ -26,6 +26,7 @@ import com.adri833.orpheus.utils.AlbumText
 import com.adri833.orpheus.utils.ArtistText
 import com.adri833.orpheus.utils.NameText
 import com.adri833.orpheus.utils.noRippleClickable
+import java.io.File
 
 @Composable
 fun SongItem(
@@ -37,6 +38,7 @@ fun SongItem(
 ) {
     val isCurrent = currentSong?.id == song.id
     val shouldAnimate = isCurrent && isPlaying
+    val songFileName = File(song.filePath).name
 
     Row(
         modifier = Modifier
@@ -57,7 +59,12 @@ fun SongItem(
                 color = if (isCurrent) Gold else Color.White
             )
             ArtistText(artist = song.artist)
-            AlbumText(album = song.album)
+            Row (
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                QualityTag(fileName = songFileName)
+                AlbumText(album = song.album)
+            }
         }
 
         // Equalizer

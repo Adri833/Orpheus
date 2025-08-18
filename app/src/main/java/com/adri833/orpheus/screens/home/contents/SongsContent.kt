@@ -71,7 +71,6 @@ fun SongsContent(
         }
     }
 
-
     LaunchedEffect(songs) {
         if (songs.isNotEmpty()) {
             playerViewModel.loadSongs(songs)
@@ -87,14 +86,14 @@ fun SongsContent(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 14.dp),
+            .padding(bottom = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         onBack?.let {
             IconButton(onClick = it) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Favorite Icon",
+                    contentDescription = "Arrow Back",
                     modifier = Modifier.size(48.dp),
                     tint = Color.White
                 )
@@ -140,7 +139,7 @@ fun SongsContent(
             onGoToAlbum = { },
             onGoToArtist = { },
             onEditInfo = { /* lógica de edición */ },
-            onShare = { /* lógica de compartir */ },
+            onShare = { homeViewModel.shareSong(context, song) },
             onDelete = { songToDelete ->
                 homeViewModel.deleteSong(
                     song = songToDelete,

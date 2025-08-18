@@ -22,6 +22,7 @@ lifecycleRuntimeKtx = "2.9.2"
 activityCompose = "1.10.1"
 composeBom = "2025.07.00"
 lottieCompose = "6.6.7"
+material = "1.9.0"
 media = "1.7.0"
 media3Session = "1.8.0"
 navigationCompose = "2.9.3"
@@ -38,6 +39,7 @@ androidx-credentials-play-services-auth = { module = "androidx.credentials:crede
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 androidx-media = { module = "androidx.media:media", version.ref = "media" }
 androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3Session" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }

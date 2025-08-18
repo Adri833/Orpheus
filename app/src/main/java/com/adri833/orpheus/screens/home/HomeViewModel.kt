@@ -1,10 +1,13 @@
 package com.adri833.orpheus.screens.home
 
 import android.app.RecoverableSecurityException
+import android.content.ContentUris
 import android.content.Context
+import android.content.Intent
 import android.content.IntentSender
 import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,6 +39,20 @@ class HomeViewModel @Inject constructor(
 
     init {
         loadSongs()
+    }
+
+    private val _selectedAlbum = MutableStateFlow<String?>(null)
+    val selectedAlbum: StateFlow<String?> get() = _selectedAlbum
+
+    fun selectAlbum(albumName: String) {
+        _selectedAlbum.value = albumName
+    }
+
+    private val _selectedArtist = MutableStateFlow<String?>(null)
+    val selectedArtist: StateFlow<String?> get() = _selectedArtist
+
+    fun selectArtist(artistName: String) {
+        _selectedArtist.value = artistName
     }
 
     fun getProfilePicture(): Uri? {
@@ -75,6 +92,26 @@ class HomeViewModel @Inject constructor(
 
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
+    }
+
+    fun shareSong(context: Context, song: Song) {
+        val uri = ContentUris.withAppendedId(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            song.id
+        )
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "audio/*"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        context.startActivity(
+            Intent.createChooser(
+                shareIntent,
+                context.getString(R.string.share)
+            )
+        )
     }
 
     fun deleteSong(

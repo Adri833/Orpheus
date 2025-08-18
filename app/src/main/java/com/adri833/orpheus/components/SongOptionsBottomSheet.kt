@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.adri833.orpheus.domain.model.Song
 import com.adri833.orpheus.R
 import com.adri833.orpheus.ui.theme.Gold
-import com.adri833.orpheus.ui.theme.darkGray
+import com.adri833.orpheus.ui.theme.BackgroundDark
 import com.adri833.orpheus.utils.OptionText
 import com.adri833.orpheus.utils.noRippleClickable
 
@@ -36,12 +36,12 @@ fun SongOptionsBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         dragHandle = null,
-        containerColor = darkGray
+        containerColor = BackgroundDark
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(darkGray)
+                .background(BackgroundDark)
         ) {
             OptionText(
                 text = stringResource(R.string.cancel),

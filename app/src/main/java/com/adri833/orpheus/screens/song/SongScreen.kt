@@ -16,11 +16,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
+import androidx.compose.material.Slider
+import androidx.compose.material.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,31 +34,40 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.util.UnstableApi
 import com.adri833.orpheus.R
 import com.adri833.orpheus.components.AlbumCover
+import com.adri833.orpheus.components.PlayButton
+import com.adri833.orpheus.components.PlaybackQueueBottomSheet
 import com.adri833.orpheus.components.ShuffleButton
 import com.adri833.orpheus.screens.player.PlayerViewModel
+import com.adri833.orpheus.ui.theme.Gold
+import com.adri833.orpheus.ui.theme.rememberSongColors
 import com.adri833.orpheus.utils.ArtistText
 import com.adri833.orpheus.utils.NameText
+import com.adri833.orpheus.utils.noRippleClickable
 import kotlinx.coroutines.delay
 
-
+@ExperimentalMaterial3Api
 @OptIn(UnstableApi::class)
 @Composable
 fun SongScreen(
-    viewModel: PlayerViewModel,
+    playerViewModel: PlayerViewModel,
     onBack: () -> Unit
 ) {
-    val song by viewModel.currentSong.collectAsState()
-    val isPlaying by viewModel.isPlaying.collectAsState()
-    val progress by viewModel.playbackProgress.collectAsState()
+    val context = LocalContext.current
+    val song by playerViewModel.currentSong.collectAsState()
+    val progress by playerViewModel.playbackProgress.collectAsState()
     var visible by remember { mutableStateOf(false) }
     var isBackHandled by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showQueue by remember { mutableStateOf(false) }
+    val songColors = rememberSongColors(context, song?.albumArt ?: song?.contentUri)
+    val contentColor = songColors.contentColor
 
     BackHandler {
         if (!isBackHandled) {
@@ -83,11 +96,10 @@ fun SongScreen(
         )
     ) {
         song?.let { current ->
-            // TODO: Colors from cover and text
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black)
+                    .background(songColors.backgroundColor)
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -104,14 +116,14 @@ fun SongScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_down),
                         contentDescription = "Volver",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
+                        tint = contentColor,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-                AlbumCover(song = current, size = 330)
+                AlbumCover(song = current, size = 290)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -119,29 +131,14 @@ fun SongScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    NameText(current.title, color = Color.White, fontSize = 22f)
+                    NameText(current.title, color = contentColor, fontSize = 22f)
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    ArtistText(current.artist, color = Color.Gray, fontSize = 16f)
+                    ArtistText(current.artist, color = contentColor.copy(alpha = 0.6f), fontSize = 16f)
                 }
 
-                Spacer(modifier = Modifier.height(50.dp))
-
-                Slider(
-                    value = progress,
-                    onValueChange = { newValue ->
-                        val duration = viewModel.playerManager.player.duration
-                        val seekTo = (newValue * duration).toLong()
-                        viewModel.playerManager.player.seekTo(seekTo)
-                    },
-                    modifier = Modifier,
-                    colors = SliderDefaults.colors(
-                        thumbColor = Color.White,
-                        activeTrackColor = Color.White,
-                        inactiveTrackColor = Color.Gray
-                    )
-                )
+                Spacer(modifier = Modifier.height(40.dp))
 
                 Row(
                     modifier = Modifier
@@ -152,16 +149,36 @@ fun SongScreen(
                 ) {
                     // Tiempo actual a la izquierda
                     Text(
-                        text = formatTime((progress * (viewModel.playerManager.player.duration)).toLong()),
-                        color = Color.White,
-                        fontSize = 14.sp
+                        text = formatTime((progress * (playerViewModel.playerManager.player.duration)).toLong()),
+                        color = contentColor.copy(alpha = 0.6f),
+                        fontSize = 12.sp
                     )
+
+                    Spacer(modifier = Modifier.width(14.dp))
+
+                    // Barra de progreso
+                    Slider(
+                        value = progress,
+                        onValueChange = { newValue ->
+                            val duration = playerViewModel.playerManager.player.duration
+                            val seekTo = (newValue * duration).toLong()
+                            playerViewModel.playerManager.player.seekTo(seekTo)
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = SliderDefaults.colors(
+                            thumbColor = contentColor,
+                            activeTrackColor = contentColor,
+                            inactiveTrackColor = contentColor.copy(alpha = 0.6f)
+                        ),
+                    )
+
+                    Spacer(modifier = Modifier.width(14.dp))
 
                     // Tiempo total a la derecha
                     Text(
-                        text = formatTime(viewModel.playerManager.player.duration),
-                        color = Color.White,
-                        fontSize = 14.sp
+                        text = formatTime(playerViewModel.playerManager.player.duration),
+                        color = contentColor.copy(alpha = 0.6f),
+                        fontSize = 12.sp
                     )
                 }
 
@@ -172,38 +189,43 @@ fun SongScreen(
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ShuffleButton(viewModel)
+                    ShuffleButton(playerViewModel, size = 36, colorEnabled = Gold.copy(alpha = 0.9f) ,colorDisabled = contentColor.copy(alpha = 0.6f))
 
-                    IconButton(onClick = { viewModel.skipToPrevious() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_previous),
-                            contentDescription = "Anterior",
-                            tint = Color.White,
-                            modifier = Modifier.size(56.dp)
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_previous),
+                        contentDescription = "Anterior",
+                        tint = contentColor,
+                        modifier = Modifier
+                            .size(36.dp)
+                            .noRippleClickable(onClick = { playerViewModel.skipToPrevious() })
+                    )
 
-                    IconButton(onClick = { viewModel.togglePlayback() }) {
-                        Icon(
-                            painter = if (isPlaying)
-                                painterResource(id = R.drawable.ic_pause) else
-                                painterResource(id = R.drawable.ic_play),
-                            contentDescription = "Play/Pause",
-                            tint = Color.White,
-                            modifier = Modifier.size(56.dp)
-                        )
-                    }
+                    PlayButton(
+                        isPlaying = playerViewModel.isPlaying,
+                        onPlayClick = { playerViewModel.togglePlayback() },
+                        onPauseClick = { playerViewModel.togglePlayback() },
+                        backgroundColor = contentColor,
+                        iconColor = songColors.backgroundColor
+                    )
 
-                    IconButton(onClick = { viewModel.skipToNext() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_next),
-                            contentDescription = "Siguiente",
-                            tint = Color.White,
-                            modifier = Modifier.size(56.dp)
-                        )
-                    }
 
-                    ShuffleButton(viewModel)
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_next),
+                        contentDescription = "Siguiente",
+                        tint = contentColor,
+                        modifier = Modifier
+                            .size(36.dp)
+                            .noRippleClickable(onClick = { playerViewModel.skipToNext() })
+                    )
+
+                    Icon(
+                        painter = painterResource(R.drawable.ic_queue),
+                        contentDescription = "Queue",
+                        tint = contentColor.copy(alpha = 0.6f),
+                        modifier = Modifier
+                            .size(36.dp)
+                            .noRippleClickable { showQueue = true }
+                    )
                 }
             }
 
@@ -214,6 +236,22 @@ fun SongScreen(
         if (!visible) {
             delay(250)
             onBack()
+        }
+    }
+
+    if (showQueue) {
+        androidx.compose.material3.ModalBottomSheet(
+            onDismissRequest = { showQueue = false },
+            sheetState = sheetState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 100.dp),
+            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        ) {
+            PlaybackQueueBottomSheet(
+                playerViewModel = playerViewModel,
+                onDismissRequest = { showQueue = false }
+            )
         }
     }
 }

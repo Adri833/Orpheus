@@ -100,7 +100,7 @@ fun NavigationHost(
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Routes.Splash.route,
+            startDestination = Routes.Home.route,
             modifier = Modifier.padding(paddingValues)
         ) {
 
@@ -160,7 +160,7 @@ fun NavigationHost(
             // Navegacion de la pantalla Song
             composable(Routes.Song.route) {
                 SongScreen(
-                    viewModel = playerViewModel,
+                    playerViewModel = playerViewModel,
                     onBack = { navController.popBackStack() })
             }
         }

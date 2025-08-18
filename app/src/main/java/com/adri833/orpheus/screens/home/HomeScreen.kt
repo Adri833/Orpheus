@@ -87,7 +87,7 @@ fun HomeScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 28.dp),
+                .padding(bottom = 22.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -118,7 +118,7 @@ fun HomeScreen(
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 14.dp),
+                .padding(bottom = 12.dp),
         ) {
             items(options.size) { name ->
                 SelectableButton(

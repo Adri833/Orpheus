@@ -57,8 +57,12 @@ fun Color.mixWithWhite(factor: Float): Color {
 }
 
 fun isColorDark(color: Color): Boolean {
-    val luminance = 0.2126 * color.red + 0.7152 * color.green + 0.0722 * color.blue
-    return luminance < 0.1
+    val r = color.red
+    val g = color.green
+    val b = color.blue
+    val luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    val contrastWithWhite = (1.05) / (luminance + 0.05)
+    return contrastWithWhite > 3.0  // si el contraste con blanco es alto, es oscuro
 }
 
 fun Color.adaptiveProgressBackground(): Color {

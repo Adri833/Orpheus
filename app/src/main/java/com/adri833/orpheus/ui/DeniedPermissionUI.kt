@@ -43,9 +43,9 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.adri833.orpheus.ui.theme.Gray
+import com.adri833.orpheus.ui.theme.VeryDarkGray
 import com.adri833.orpheus.ui.theme.Gold
-import com.adri833.orpheus.ui.theme.LightGray
+import com.adri833.orpheus.ui.theme.DarkGray
 import com.adri833.orpheus.utils.adjustForMobile
 import com.adri833.orpheus.utils.isAudioPermissionGranted
 import com.adri833.orpheus.utils.noRippleClickable
@@ -89,7 +89,7 @@ fun DeniedPermissionUI(
             painter = painterResource(id = R.drawable.ic_permission_audio),
             contentDescription = "Permiso requerido",
             modifier = Modifier.size(120.dp),
-            colorFilter = ColorFilter.tint(LightGray)
+            colorFilter = ColorFilter.tint(DarkGray)
         )
 
         Spacer(modifier = Modifier.height(40.dp))
@@ -131,7 +131,7 @@ fun DeniedPermissionUI(
                 text = stringResource(R.string.open_settings),
                 fontSize = 16.sp,
                 fontFamily = FontFamily(Font(R.font.merriweather_regular)),
-                color = Gray,
+                color = VeryDarkGray,
                 fontWeight = FontWeight.SemiBold
             )
         }

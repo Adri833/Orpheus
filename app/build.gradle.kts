@@ -70,6 +70,9 @@ dependencies {
     implementation(libs.androidx.media3.session)
     implementation(libs.androidx.media)
 
+    // Material 2
+    implementation(libs.androidx.material)
+
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
