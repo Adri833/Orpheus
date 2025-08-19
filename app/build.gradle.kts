@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.adri833.orpheus"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.adri833.orpheus"

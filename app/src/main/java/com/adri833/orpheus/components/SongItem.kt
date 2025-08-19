@@ -62,7 +62,7 @@ fun SongItem(
             Row (
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                QualityTag(fileName = songFileName)
+                QualityTag(fileName = songFileName, size = 16)
                 AlbumText(album = song.album)
             }
         }

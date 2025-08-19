@@ -21,13 +21,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import com.adri833.orpheus.screens.player.PlayerViewModel
 import com.adri833.orpheus.R
+import com.adri833.orpheus.domain.model.Song
 import com.adri833.orpheus.ui.theme.Gold
 import com.adri833.orpheus.utils.ArtistText
 import com.adri833.orpheus.utils.NameText
 import com.adri833.orpheus.utils.noRippleClickable
+import java.io.File
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalAnimationApi::class)
@@ -103,8 +106,13 @@ fun PlaybackQueueBottomSheet(
                                     Spacer(modifier = Modifier.width(6.dp))
                                     NameText(animatedSong.title, color = Gold)
                                 }
-
-                                ArtistText(animatedSong.artist)
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    QualityTag(
+                                        fileName = File(animatedSong.filePath).name,
+                                        size = 15
+                                    )
+                                    ArtistText(animatedSong.artist)
+                                }
                             }
 
                             PlayButton(
@@ -141,7 +149,13 @@ fun PlaybackQueueBottomSheet(
 
                         Column {
                             NameText(song.title, color = Color.White)
-                            ArtistText(song.artist)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                QualityTag(
+                                    fileName = File(song.filePath).name,
+                                    size = 15
+                                )
+                                ArtistText(song.artist)
+                            }
                         }
                     }
                 }

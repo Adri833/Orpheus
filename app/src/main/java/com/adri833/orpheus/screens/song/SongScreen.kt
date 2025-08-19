@@ -121,11 +121,11 @@ fun SongScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(36.dp))
 
                 AlbumCover(song = current, size = 290)
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(26.dp))
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -250,7 +250,7 @@ fun SongScreen(
         ) {
             PlaybackQueueBottomSheet(
                 playerViewModel = playerViewModel,
-                onDismissRequest = { showQueue = false }
+                onDismissRequest = { showQueue = false },
             )
         }
     }

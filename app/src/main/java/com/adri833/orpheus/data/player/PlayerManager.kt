@@ -213,6 +213,8 @@ class PlayerManager @Inject constructor(
     }
 
     fun startPlaying(songsList: List<Song>) {
+        val service = musicService ?: return
+
         if (queue.value.isEmpty()) {
             val startIndex = if (isShuffleEnabled && songsList.isNotEmpty()) {
                 (songsList.indices).random()
@@ -220,16 +222,20 @@ class PlayerManager @Inject constructor(
                 0
             }
             setQueue(songsList, startIndex = startIndex)
-            player.play()
+
+            if (service.requestAudioFocus()) {
+                player.play()
+            }
         } else {
             if (player.isPlaying) {
                 player.pause()
             } else {
-                player.play()
+                if (service.requestAudioFocus()) {
+                    player.play()
+                }
             }
         }
     }
-
 
     private fun stopProgressUpdates() {
         progressJob?.cancel()
