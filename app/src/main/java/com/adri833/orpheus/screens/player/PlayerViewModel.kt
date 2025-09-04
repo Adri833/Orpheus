@@ -29,6 +29,8 @@ class PlayerViewModel
     val isShuffleEnabled: StateFlow<Boolean> = playerManager.isShuffleEnabledFlow
     val songs = songRepository.getSongs()
 
+    private val _selectedSong = MutableStateFlow<Song?>(null)
+    val selectedSong = _selectedSong
     private val _isForward = MutableStateFlow(true)
     val isForward: StateFlow<Boolean> = _isForward
 
@@ -66,6 +68,10 @@ class PlayerViewModel
 
     fun reorderQueue(fromIndex: Int, toIndex: Int) {
         playerManager.reorderQueue(fromIndex, toIndex)
+    }
+
+    fun selectSong(song: Song) {
+        _selectedSong.value = song
     }
 
     fun toggleShuffle() {

@@ -8,4 +8,5 @@ sealed class Routes(val route: String) {
     data object Drive : Routes("drive")
     data object Downloader : Routes("downloader")
     data object Song : Routes("song")
+    data object Information : Routes("information")
 }

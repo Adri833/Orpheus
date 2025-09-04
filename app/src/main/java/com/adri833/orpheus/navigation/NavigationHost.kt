@@ -32,6 +32,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.media3.common.util.UnstableApi
 import com.adri833.orpheus.components.PlaybackQueueBottomSheet
+import com.adri833.orpheus.screens.information.InformationScreen
 import com.adri833.orpheus.screens.song.SongScreen
 import com.adri833.orpheus.ui.slideInUpAnimation
 import kotlinx.coroutines.delay
@@ -139,7 +140,12 @@ fun NavigationHost(
             composable(
                 route = Routes.Home.route,
             ) {
-                HomeScreen(playerViewModel)
+                HomeScreen(
+                    playerViewModel = playerViewModel,
+                    navigationToInformation = {
+                        navController.navigate(Routes.Information.route)
+                    }
+                )
             }
 
             // Navegacion de la pantalla Library
@@ -163,6 +169,20 @@ fun NavigationHost(
                     playerViewModel = playerViewModel,
                     onBack = { navController.popBackStack() })
             }
+
+            // Navegacion de la pantalla Information
+            composable(
+                Routes.Information.route
+            ) {
+                val selectedSong by playerViewModel.selectedSong.collectAsState()
+                selectedSong?.let { song ->
+                    InformationScreen(
+                        song = song,
+                        onBack = { navController.popBackStack() }
+                    )
+                }
+            }
+
         }
     }
     if (showQueue) {

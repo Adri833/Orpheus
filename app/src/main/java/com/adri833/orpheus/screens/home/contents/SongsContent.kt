@@ -41,7 +41,8 @@ fun SongsContent(
     songs: List<Song>,
     homeViewModel: HomeViewModel,
     playerViewModel: PlayerViewModel,
-    onBack: (() -> Unit)? = null
+    onBack: (() -> Unit)? = null,
+    navigationToInformation: () -> Unit
 ) {
     val context = LocalContext.current
     val searchQuery by homeViewModel.searchQuery.collectAsState()
@@ -138,7 +139,11 @@ fun SongsContent(
             onAddToQueue = { },
             onGoToAlbum = { },
             onGoToArtist = { },
-            onEditInfo = { /* lógica de edición */ },
+            onEditInfo = {
+                playerViewModel.selectSong(song)
+                navigationToInformation()
+                selectedSong = null
+            },
             onShare = { homeViewModel.shareSong(context, song) },
             onDelete = { songToDelete ->
                 homeViewModel.deleteSong(

@@ -79,6 +79,13 @@ class HomeViewModel @Inject constructor(
         authRepository.logout()
     }
 
+    fun refreshSongs() {
+        viewModelScope.launch {
+            val list = songRepository.getSongs()
+            _songs.value = list
+        }
+    }
+
     fun loadSongs() {
         viewModelScope.launch {
             val list = songRepository.getSongs()

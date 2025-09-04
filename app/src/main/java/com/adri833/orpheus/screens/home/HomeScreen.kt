@@ -57,6 +57,7 @@ import com.adri833.orpheus.ui.transitionFadeNormal
 fun HomeScreen(
     playerViewModel: PlayerViewModel,
     homeViewModel: HomeViewModel = hiltViewModel(),
+    navigationToInformation: () -> Unit,
 ) {
     val options = listOf(
         stringResource(R.string.canciones),
@@ -132,7 +133,7 @@ fun HomeScreen(
         // Main content
         AudioPermissionHandler {
             when (selected) {
-                stringResource(R.string.canciones) -> SongsContent(songs, homeViewModel, playerViewModel)
+                stringResource(R.string.canciones) -> SongsContent(songs, homeViewModel, playerViewModel, navigationToInformation = navigationToInformation)
                 stringResource(R.string.albumes) -> AlbumsHost(songs, homeViewModel, playerViewModel)
                 stringResource(R.string.artistas) -> ArtistsHost(songs, homeViewModel, playerViewModel)
                 stringResource(R.string.carpetas) -> FoldersContent(homeViewModel, playerViewModel)

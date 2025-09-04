@@ -1,5 +1,6 @@
 package com.adri833.orpheus.screens.home.contents
 
+import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,6 +11,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.media3.common.util.UnstableApi
 import com.adri833.orpheus.components.FolderItem
 import com.adri833.orpheus.screens.home.HomeViewModel
 import com.adri833.orpheus.screens.player.PlayerViewModel
@@ -17,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
+@OptIn(UnstableApi::class)
 @Composable
 fun FoldersContent(
     homeViewModel: HomeViewModel,
@@ -43,7 +46,8 @@ fun FoldersContent(
             songs = songsInFolder,
             homeViewModel = homeViewModel,
             playerViewModel = playerViewModel,
-            onBack = { selectedFolder.value = null }
+            onBack = { selectedFolder.value = null },
+            navigationToInformation = { }
         )
     } ?: run {
         LazyColumn(modifier = Modifier.fillMaxSize()) {

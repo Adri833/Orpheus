@@ -37,7 +37,8 @@ fun AlbumsHost(
             songs = selectedAlbum!!.second,
             homeViewModel = homeViewModel,
             playerViewModel = playerViewModel,
-            onBack = { selectedAlbum = null }
+            onBack = { selectedAlbum = null },
+            navigationToInformation = { }
         )
     }
 }
