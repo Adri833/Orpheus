@@ -47,7 +47,7 @@ fun SongItem(
             .noRippleClickable { onClick(song) },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AlbumCover(song)
+        AlbumCover(song.albumArt)
 
         Spacer(modifier = Modifier.width(12.dp))
 

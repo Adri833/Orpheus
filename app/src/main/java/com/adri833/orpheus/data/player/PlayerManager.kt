@@ -92,6 +92,20 @@ class PlayerManager @Inject constructor(
         player.play()
     }
 
+    fun skipOrRestart() {
+        val currentPosition = player.currentPosition
+        val index = player.currentMediaItemIndex
+
+        if (currentPosition > 3000L) {
+            player.seekTo(0L)
+        } else {
+            val previousIndex = if (index > 0) index - 1 else 0
+            player.seekTo(previousIndex, 0L)
+        }
+
+        player.play()
+    }
+
     fun release() {
         player.removeListener(playerListener)
         player.stop()

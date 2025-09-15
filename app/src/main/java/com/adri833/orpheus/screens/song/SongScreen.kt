@@ -7,7 +7,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,11 +31,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -96,6 +100,8 @@ fun SongScreen(
         )
     ) {
         song?.let { current ->
+            var dragAmount by remember { mutableFloatStateOf(0f) }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -117,19 +123,38 @@ fun SongScreen(
                         painter = painterResource(id = R.drawable.ic_arrow_down),
                         contentDescription = "Volver",
                         tint = contentColor,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(26.dp)
                     )
                 }
 
-                Spacer(modifier = Modifier.height(36.dp))
+                Spacer(modifier = Modifier.height(42.dp))
 
-                AlbumCover(song = current, size = 290)
+                Box(
+                    modifier = Modifier
+                        .pointerInput(Unit) {
+                            detectDragGestures(
+                                onDragEnd = {
+                                    if (dragAmount > 50) {
+                                        playerViewModel.skipToPrevious()
+                                    } else if (dragAmount < -50) {
+                                        playerViewModel.skipToNext()
+                                    }
+                                    dragAmount = 0f
+                                }
+                            ) { change, amount ->
+                                change.consume()
+                                dragAmount += amount.x
+                            }
+                        }
+                ) {
+                    AlbumCover(current.albumArt, size = 290)
+                }
 
                 Spacer(modifier = Modifier.height(26.dp))
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.Start
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     NameText(current.title, color = contentColor, fontSize = 22f)
 
@@ -197,7 +222,7 @@ fun SongScreen(
                         tint = contentColor,
                         modifier = Modifier
                             .size(36.dp)
-                            .noRippleClickable(onClick = { playerViewModel.skipToPrevious() })
+                            .noRippleClickable(onClick = { playerViewModel.skipOrRestart() })
                     )
 
                     PlayButton(

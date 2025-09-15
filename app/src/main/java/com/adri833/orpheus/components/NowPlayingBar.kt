@@ -75,7 +75,7 @@ fun NowPlayingBar(
             .noRippleClickable { navigationToSong() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AlbumCover(song, 58)
+        AlbumCover(song.albumArt, 58)
 
         Spacer(modifier = Modifier.width(16.dp))
 

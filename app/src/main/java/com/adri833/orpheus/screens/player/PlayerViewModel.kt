@@ -108,6 +108,8 @@ class PlayerViewModel
 
     fun skipToPrevious() = playerManager.skipToPrevious()
 
+    fun skipOrRestart() = playerManager.skipOrRestart()
+
     fun skipToIndex(index: Int) {
         playerManager.skipToIndex(index)
     }

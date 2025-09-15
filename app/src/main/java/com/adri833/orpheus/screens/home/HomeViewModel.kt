@@ -51,6 +51,9 @@ class HomeViewModel @Inject constructor(
     private val _selectedArtist = MutableStateFlow<String?>(null)
     val selectedArtist: StateFlow<String?> get() = _selectedArtist
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
+
     fun selectArtist(artistName: String) {
         _selectedArtist.value = artistName
     }
@@ -81,8 +84,10 @@ class HomeViewModel @Inject constructor(
 
     fun refreshSongs() {
         viewModelScope.launch {
+            _isRefreshing.value = true
             val list = songRepository.getSongs()
             _songs.value = list
+            _isRefreshing.value = false
         }
     }
 
@@ -148,5 +153,4 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
 }

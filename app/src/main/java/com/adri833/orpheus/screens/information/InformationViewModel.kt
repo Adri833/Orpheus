@@ -22,6 +22,7 @@ import org.jaudiotagger.tag.FieldKey
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
+import org.jaudiotagger.tag.images.ArtworkFactory
 
 @HiltViewModel
 class InformationViewModel @Inject constructor(
@@ -38,7 +39,7 @@ class InformationViewModel @Inject constructor(
     fun loadSong(song: Song) {
         currentSong = song
         _uiState.value = InformationUiState(
-            coverUri = song.contentUri,
+            coverUri = song.albumArt,
             title = song.title,
             artist = song.artist,
             album = song.album
@@ -75,6 +76,8 @@ class InformationViewModel @Inject constructor(
                     onRecoverableSecurityException
                 )
                 if (success) {
+                    currentSong = currentSong?.copy(albumArt = _uiState.value.coverUri)
+
                     pendingSongChanges = null
                     onSuccess()
                 }
@@ -100,7 +103,6 @@ class InformationViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private suspend fun updateSongMetadata(
         context: Context,
         filePath: String,
@@ -122,6 +124,23 @@ class InformationViewModel @Inject constructor(
             tag.setField(FieldKey.TITLE, newTitle)
             tag.setField(FieldKey.ARTIST, newArtist)
             tag.setField(FieldKey.ALBUM, newAlbum)
+
+            val coverUri = _uiState.value.coverUri
+            if (coverUri != null && coverUri != currentSong?.albumArt) {
+                val tempCover = File(context.cacheDir, "temp_cover.jpg")
+                context.contentResolver.openInputStream(coverUri)?.use { input ->
+                    tempCover.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+
+                val artwork = ArtworkFactory.createArtworkFromFile(tempCover)
+                tag.deleteArtworkField()
+                tag.setField(artwork)
+
+                tempCover.delete()
+            }
+
             AudioFileIO.write(audioFile)
 
             try {
@@ -166,4 +185,9 @@ class InformationViewModel @Inject constructor(
         }
         return null
     }
+
+    fun onCoverChange(newCoverUri: Uri) {
+        _uiState.value = _uiState.value.copy(coverUri = newCoverUri)
+    }
+
 }

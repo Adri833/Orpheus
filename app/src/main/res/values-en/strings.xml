@@ -55,4 +55,11 @@
     <string name="song_deleted_cancelled">Deletion cancelled</string>
     <string name="cancel">Cancel</string>
 
+    // Edit information
+    <string name="save_changes">Save changes</string>
+    <string name="title">Title</string>
+    <string name="artist">Artist</string>
+    <string name="album">Album</string>
+    <string name="changes_saved">CChanges saved</string>
+
 </resources>

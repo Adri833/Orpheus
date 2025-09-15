@@ -92,7 +92,7 @@ fun PlaybackQueueBottomSheet(
                                 .padding(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            AlbumCover(animatedSong)
+                            AlbumCover(animatedSong.albumArt)
 
                             Spacer(modifier = Modifier.width(12.dp))
 
@@ -143,7 +143,7 @@ fun PlaybackQueueBottomSheet(
                             .padding(horizontal = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        AlbumCover(song)
+                        AlbumCover(song.albumArt)
 
                         Spacer(modifier = Modifier.width(12.dp))
 

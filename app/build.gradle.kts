@@ -102,4 +102,5 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation("net.jthink:jaudiotagger:3.0.1")
+    implementation(libs.accompanist.swiperefresh)
 }

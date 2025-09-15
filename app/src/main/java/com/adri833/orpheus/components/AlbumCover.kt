@@ -1,5 +1,6 @@
 package com.adri833.orpheus.components
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,16 +12,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.adri833.orpheus.R
-import com.adri833.orpheus.domain.model.Song
 
 @Composable
 fun AlbumCover(
-    song: Song,
+    coverUri: Uri?,
     size: Int = 56
 ) {
-    val painter = if (song.albumArt != null) {
+    val painter = if (coverUri != null) {
         rememberAsyncImagePainter(
-            model = song.albumArt,
+            model = coverUri,
             placeholder = painterResource(R.drawable.placeholder),
             error = painterResource(R.drawable.placeholder)
         )
