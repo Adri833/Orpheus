@@ -176,4 +176,3 @@ fun InformationScreen(
         }
     }
 }
-

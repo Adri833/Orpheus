@@ -21,11 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import com.adri833.orpheus.screens.player.PlayerViewModel
 import com.adri833.orpheus.R
-import com.adri833.orpheus.domain.model.Song
 import com.adri833.orpheus.ui.theme.Gold
 import com.adri833.orpheus.utils.ArtistText
 import com.adri833.orpheus.utils.NameText

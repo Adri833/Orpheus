@@ -159,9 +159,12 @@ fun SongsContent(
         SongOptionsBottomSheet(
             song = song,
             onDismiss = { selectedSong = null },
-            onAddToQueue = { },
-            onGoToAlbum = { },
-            onGoToArtist = { },
+            onAddToQueue = {
+                playerViewModel.queue.value.takeIf { it.isNotEmpty() }?.let {
+                    playerViewModel.addSong(song)
+                    Toast.makeText(context, context.getString(R.string.song_added, song.title), Toast.LENGTH_SHORT).show()
+                }
+            },
             onEditInfo = {
                 playerViewModel.selectSong(song)
                 navigationToInformation()

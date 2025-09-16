@@ -113,7 +113,8 @@ class InformationViewModel @Inject constructor(
     ): Boolean = withContext(Dispatchers.IO) {
         try {
             val uri = getSongUri(context, filePath) ?: return@withContext false
-            val tempFile = File(context.cacheDir, "temp_song.mp3")
+            val extension = File(filePath).extension
+            val tempFile = File(context.cacheDir, "temp_song.$extension")
 
             context.contentResolver.openInputStream(uri)?.use { input ->
                 tempFile.outputStream().use { output -> input.copyTo(output) }
@@ -189,5 +190,4 @@ class InformationViewModel @Inject constructor(
     fun onCoverChange(newCoverUri: Uri) {
         _uiState.value = _uiState.value.copy(coverUri = newCoverUri)
     }
-
 }

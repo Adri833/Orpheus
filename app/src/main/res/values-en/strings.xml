@@ -54,6 +54,7 @@
     <string name="song_deleted_failure">Failed to delete the song</string>
     <string name="song_deleted_cancelled">Deletion cancelled</string>
     <string name="cancel">Cancel</string>
+    <string name="song_added">"%1$s" added to queue</string>
 
     // Edit information
     <string name="save_changes">Save changes</string>

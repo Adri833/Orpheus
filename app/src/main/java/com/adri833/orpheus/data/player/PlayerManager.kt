@@ -170,23 +170,26 @@ class PlayerManager @Inject constructor(
         player.seekTo(startIndex, currentPosition)
     }
 
-    fun addSongs(songsToAdd: List<Song>) {
-        originalQueue.addAll(songsToAdd)
-
-        currentQueue = if (isShuffleEnabled) {
-            val shuffledNew = songsToAdd.shuffled()
-            (currentQueue + shuffledNew).toMutableList()
-        } else {
-            (currentQueue + songsToAdd).toMutableList()
+    fun addSong(song: Song) {
+        if (currentQueue.isEmpty()) {
+            return
         }
 
         val currentIndex = player.currentMediaItemIndex
-        setQueueInternal(currentIndex)
+        val originalCurrentIndex = originalQueue.indexOf(currentQueue.getOrNull(currentIndex))
+        val insertPosOriginal = if (originalCurrentIndex >= 0) originalCurrentIndex + 1 else originalQueue.size
+        originalQueue.add(insertPosOriginal, song)
+
+        val insertPosCurrent = (currentIndex + 1).coerceAtMost(currentQueue.size)
+        currentQueue.add(insertPosCurrent, song)
+
+        _queue.value = currentQueue.toList()
+        player.addMediaItem(insertPosCurrent, song.toMediaItem())
     }
 
-    fun removeSongs(songsToRemove: List<Song>) {
-        originalQueue.removeAll(songsToRemove)
-        currentQueue.removeAll(songsToRemove)
+    fun removeSong(songToRemove: Song) {
+        originalQueue.remove(songToRemove)
+        currentQueue.remove(songToRemove)
 
         if (currentQueue.isEmpty()) {
             player.stop()

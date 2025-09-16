@@ -58,12 +58,12 @@ class PlayerViewModel
         playerManager.setQueue(all, startIndex, true)
     }
 
-    fun addSongs(songs: List<Song>) {
-        playerManager.addSongs(songs)
+    fun addSong(song: Song) {
+        playerManager.addSong(song)
     }
 
-    fun removeSongs(songs: List<Song>) {
-        playerManager.removeSongs(songs)
+    fun removeSong(song: Song) {
+        playerManager.removeSong(song)
     }
 
     fun reorderQueue(fromIndex: Int, toIndex: Int) {

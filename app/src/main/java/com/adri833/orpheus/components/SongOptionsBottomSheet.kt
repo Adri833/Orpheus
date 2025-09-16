@@ -24,8 +24,6 @@ fun SongOptionsBottomSheet(
     song: Song,
     onDismiss: () -> Unit,
     onAddToQueue: (Song) -> Unit,
-    onGoToAlbum: (Song) -> Unit,
-    onGoToArtist: (Song) -> Unit,
     onEditInfo: (Song) -> Unit,
     onShare: (Song) -> Unit,
     onDelete: (Song) -> Unit
@@ -58,22 +56,6 @@ fun SongOptionsBottomSheet(
                 text = stringResource(R.string.add_to_queue)
             ) {
                 onAddToQueue(song)
-                onDismiss()
-            }
-
-            OptionListItem(
-                icon = painterResource(R.drawable.ic_vinyl),
-                text = stringResource(R.string.go_to_album)
-            ) {
-                onGoToAlbum(song)
-                onDismiss()
-            }
-
-            OptionListItem(
-                icon = painterResource(R.drawable.ic_artist),
-                text = stringResource(R.string.go_to_artist)
-            ) {
-                onGoToArtist(song)
                 onDismiss()
             }
 
