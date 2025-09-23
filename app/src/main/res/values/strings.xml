@@ -5,6 +5,7 @@
     <string name="login_google">Iniciar sesión con Google</string>
     <string name="login_success">Bienvenido</string>
     <string name="logout">Cerrar sesión</string>
+    <string name="next_update">Disponible próximamente</string>
 
     // Reproductor
     <string name="shuffle">Aleatorio</string>
@@ -62,4 +63,9 @@
     <string name="artist">Artista</string>
     <string name="album">Album</string>
     <string name="changes_saved">Cambios guardados</string>
+
+    // Descargas
+    <string name="downloading">Descargando… ⏳</string>
+    <string name="download_success">Descarga finalizada ✅</string>
+    <string name="download_error">Descarga fallida ❌</string>
 </resources>

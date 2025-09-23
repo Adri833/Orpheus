@@ -1,19 +1,21 @@
 package com.adri833.orpheus.screens.information
 
 import android.app.Activity
-import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -24,6 +26,9 @@ import com.adri833.orpheus.domain.model.Song
 import com.adri833.orpheus.ui.theme.Gold
 import com.adri833.orpheus.R
 import com.adri833.orpheus.utils.noRippleClickable
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.platform.LocalFocusManager
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +39,7 @@ fun InformationScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
     var pendingLauncher by remember { mutableStateOf<((IntentSenderRequest) -> Unit)?>(null) }
 
@@ -50,15 +56,6 @@ fun InformationScreen(
                     onBack()
                 }
             )
-        }
-    }
-
-    // Launcher para abrir galería
-    val pickImageLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            viewModel.onCoverChange(it)
         }
     }
 
@@ -92,9 +89,9 @@ fun InformationScreen(
         Spacer(modifier = Modifier.height(50.dp))
 
         Box(
-            modifier = Modifier.noRippleClickable(onClick = { pickImageLauncher.launch("image/*") })
+            modifier = Modifier.noRippleClickable(onClick = { Toast.makeText(context, context.getString(R.string.next_update), Toast.LENGTH_SHORT).show() })
         ) {
-            AlbumCover(coverUri = uiState.coverUri, size = 230)
+            AlbumCover(coverUri = uiState.coverUri, size = 190)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -112,7 +109,14 @@ fun InformationScreen(
                 cursorColor = Gold,
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
+            singleLine = true
         )
 
         OutlinedTextField(
@@ -128,7 +132,14 @@ fun InformationScreen(
                 cursorColor = Gold,
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
+            singleLine = true
         )
 
         OutlinedTextField(
@@ -144,7 +155,14 @@ fun InformationScreen(
                 cursorColor = Gold,
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { focusManager.clearFocus() }
+            ),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.weight(1f))

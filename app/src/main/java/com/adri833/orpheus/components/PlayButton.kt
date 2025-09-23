@@ -31,7 +31,7 @@ fun PlayButton(
 
     Box(
         modifier = modifier
-            .size(56.dp)
+            .size(54.dp)
             .background(color = backgroundColor, shape = CircleShape)
             .clip(CircleShape)
             .noRippleClickable {

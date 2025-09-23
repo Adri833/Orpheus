@@ -7,7 +7,6 @@ import android.content.IntentSender
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.adri833.orpheus.domain.model.Song
@@ -22,7 +21,6 @@ import org.jaudiotagger.tag.FieldKey
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
-import org.jaudiotagger.tag.images.ArtworkFactory
 
 @HiltViewModel
 class InformationViewModel @Inject constructor(
@@ -126,22 +124,6 @@ class InformationViewModel @Inject constructor(
             tag.setField(FieldKey.ARTIST, newArtist)
             tag.setField(FieldKey.ALBUM, newAlbum)
 
-            val coverUri = _uiState.value.coverUri
-            if (coverUri != null && coverUri != currentSong?.albumArt) {
-                val tempCover = File(context.cacheDir, "temp_cover.jpg")
-                context.contentResolver.openInputStream(coverUri)?.use { input ->
-                    tempCover.outputStream().use { output ->
-                        input.copyTo(output)
-                    }
-                }
-
-                val artwork = ArtworkFactory.createArtworkFromFile(tempCover)
-                tag.deleteArtworkField()
-                tag.setField(artwork)
-
-                tempCover.delete()
-            }
-
             AudioFileIO.write(audioFile)
 
             try {
@@ -185,9 +167,5 @@ class InformationViewModel @Inject constructor(
             }
         }
         return null
-    }
-
-    fun onCoverChange(newCoverUri: Uri) {
-        _uiState.value = _uiState.value.copy(coverUri = newCoverUri)
     }
 }

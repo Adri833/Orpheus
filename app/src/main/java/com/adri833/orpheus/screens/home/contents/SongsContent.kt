@@ -1,3 +1,5 @@
+@file:Suppress("OPT_IN_ARGUMENT_IS_NOT_MARKER")
+
 package com.adri833.orpheus.screens.home.contents
 
 import android.app.Activity
@@ -109,7 +111,7 @@ fun SongsContent(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Arrow Back",
-                        modifier = Modifier.size(48.dp),
+                        modifier = Modifier.size(36.dp),
                         tint = Color.White
                     )
                 }
