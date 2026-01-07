@@ -91,7 +91,7 @@ fun DownloaderScreen() {
                     }
                 }
 
-                loadUrl("https://ezconv.com")
+                loadUrl("https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiGyYbe0fmRAxWz3QIHHXZFAAsQFnoECAwQAQ&url=https%3A%2F%2Fezconv.cc%2F&usg=AOvVaw2PTC4Mhl-83YFsTRP8pwYC&opi=89978449")
         }
     })
 }

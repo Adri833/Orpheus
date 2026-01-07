@@ -1,6 +1,10 @@
 package com.adri833.orpheus.services
 
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioAttributes as FrameworkAudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
@@ -17,16 +21,23 @@ import androidx.media3.common.C
 @UnstableApi
 @AndroidEntryPoint
 class MusicService : MediaSessionService() {
-    @Inject
-    lateinit var player: ExoPlayer
 
-    @Inject
-    lateinit var playerManager: PlayerManager
+    @Inject lateinit var player: ExoPlayer
+    @Inject lateinit var playerManager: PlayerManager
 
     private var mediaSession: MediaSession? = null
 
     private lateinit var audioManager: AudioManager
     private lateinit var audioFocusRequest: AudioFocusRequest
+
+    // Se lanza cuando se desconecta Bluetooth / auriculares
+    private val becomingNoisyReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
+                playerManager.pause()
+            }
+        }
+    }
 
     private val focusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
         when (focusChange) {
@@ -36,12 +47,12 @@ class MusicService : MediaSessionService() {
                     player.play()
                 }
             }
-            AudioManager.AUDIOFOCUS_LOSS -> {
-                player.pause()
-            }
+
+            AudioManager.AUDIOFOCUS_LOSS,
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                 player.pause()
             }
+
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                 player.volume = 0.3f
             }
@@ -72,16 +83,27 @@ class MusicService : MediaSessionService() {
             .setOnAudioFocusChangeListener(focusChangeListener)
             .build()
 
+        registerReceiver(
+            becomingNoisyReceiver,
+            IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+        )
+
         val sessionActivityPendingIntent = packageManager
             ?.getLaunchIntentForPackage(packageName)
             ?.let { sessionIntent ->
-                PendingIntent.getActivity(this, 0, sessionIntent, PendingIntent.FLAG_IMMUTABLE)
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    sessionIntent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
             }
 
         mediaSession = sessionActivityPendingIntent?.let {
             MediaSession.Builder(this, player)
                 .setSessionActivity(it)
-        }?.build()
+                .build()
+        }
 
         playerManager.attachMusicService(this)
     }
@@ -91,16 +113,21 @@ class MusicService : MediaSessionService() {
         return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
     }
 
-    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = mediaSession
+    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? =
+        mediaSession
 
     override fun onDestroy() {
+        unregisterReceiver(becomingNoisyReceiver)
+
         mediaSession?.run {
             player.release()
             release()
             mediaSession = null
         }
+
         audioManager.abandonAudioFocusRequest(audioFocusRequest)
         playerManager.release()
+
         super.onDestroy()
     }
 }

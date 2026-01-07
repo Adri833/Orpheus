@@ -103,4 +103,11 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation("net.jthink:jaudiotagger:3.0.1")
     implementation(libs.accompanist.swiperefresh)
+
+    // Room
+    implementation ("androidx.room:room-runtime:2.8.4")
+    kapt ("androidx.room:room-compiler:2.8.4")
+
+    // Coroutines support
+    implementation ("androidx.room:room-ktx:2.8.4")
 }
